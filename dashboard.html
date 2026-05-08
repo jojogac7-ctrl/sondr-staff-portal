@@ -1,0 +1,2963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <title>My Dashboard — sondr.STUDIO</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Bodoni+Moda:ital,opsz,wght@1,6,900&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --blush:#ddb9ab;--blush-l:#C8ADAA;--blush-p:#F0DEDA;
+      --cream:#F1F0EA;--cream-w:#F5F4EE;--parch:#F8F6F1;
+      --white:#FDFDFA;--ink:#1C1312;--muted:#382522;--muted-l:#7A6259;--burgundy:#64333C;
+      --ok:#4CAF82;--warn:#E8A838;--err:#e04040;--gold:#B8960C;
+      --sw:260px;
+      --fd:'Playfair Display',serif;--fb:'DM Sans',sans-serif;
+      --ease:cubic-bezier(0.22,1,0.36,1);
+    }
+    html{-webkit-font-smoothing:antialiased}
+    body{font-family:var(--fb);font-weight:500;color:var(--ink);background:var(--parch);display:flex;min-height:100vh;font-size:15.5px;line-height:1.6}
+    /* Readability boosts — larger minimums and stronger contrast for small text */
+    p,li,td,th,label,input,textarea,select,button{font-weight:500}
+    .nav-item,.nav-section{font-weight:700 !important}
+    .glance-label,.glance-unit,.glance-sub,.spark-sub,.stat-lbl,.field-row label,.field-note,.dm-lbl,.inst-role,.donut-role,.sb-role,.sb-email,.hero-stat-lbl,.hero-stat-sub{font-size:0.78rem !important;letter-spacing:0.08em}
+    .field-note,.glance-sub,.hero-stat-sub,.sb-email{text-transform:none;letter-spacing:0.02em}
+
+    /* ── SIDEBAR ── */
+    .sidebar{width:var(--sw);background:linear-gradient(165deg,#FDFCFA 0%,#F6F1EC 55%,#EDE4DC 100%);border-right:1px solid rgba(100,51,60,0.15);min-height:100vh;display:flex;flex-direction:column;padding:0;position:fixed;top:0;left:0;bottom:0;z-index:50;transition:transform 0.4s var(--ease);box-shadow:2px 0 18px rgba(201,165,154,0.08)}
+    .sb-top{padding:1.8rem 1.5rem 1.5rem;border-bottom:1px solid rgba(201,165,154,0.2)}
+    .sb-logo{display:flex;align-items:center;gap:0.55rem;line-height:1}
+    .sb-logo-text{font-family:var(--fd);font-size:1.25rem;font-weight:300;color:#ddb9ab;letter-spacing:0.01em;line-height:1}
+    .sb-logo-text em{font-family:var(--fb);font-style:normal;font-size:0.52rem;letter-spacing:0.22em;text-transform:uppercase;vertical-align:1px;margin-left:0;color:#ddb9ab;font-weight:400;opacity:0.85;display:block;margin-top:2px}
+    .sb-user{padding:1.2rem 1.5rem;border-bottom:1px solid rgba(201,165,154,0.15)}
+    .sb-avatar{width:38px;height:38px;background:var(--blush-p);border:1px solid rgba(201,165,154,0.35);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1.1rem;color:var(--ink);font-weight:600;flex-shrink:0}
+    .sb-user-row{display:flex;align-items:center;gap:0.8rem}
+    .sb-name{font-family:var(--fd);font-size:1rem;color:var(--ink);font-weight:600;line-height:1.1}
+    .sb-role{font-size:0.56rem;letter-spacing:0.16em;text-transform:uppercase;color:#64333C;margin-top:0.15rem}
+    .sb-nav{flex:1;padding:1rem 0;overflow-y:auto}
+    .nav-section{font-size:0.5rem;letter-spacing:0.24em;text-transform:uppercase;color:rgba(100,51,60,0.65);padding:0.8rem 1.5rem 0.3rem;font-weight:500}
+    .nav-item{display:flex;align-items:center;gap:0.75rem;padding:0.72rem 1.5rem;font-size:0.77rem;color:rgba(26,22,20,0.9);cursor:pointer;transition:all 0.22s;border-left:2px solid transparent;text-decoration:none;position:relative}
+    .nav-item:hover{color:var(--ink);background:rgba(100,51,60,0.05);border-left-color:rgba(100,51,60,0.3)}
+    .nav-item.active{color:var(--ink);border-left-color:#64333C;background:rgba(100,51,60,0.07)}
+    .nav-item svg{width:15px;height:15px;stroke:currentColor;fill:none;flex-shrink:0;opacity:0.7}
+    .nav-item.active svg,.nav-item:hover svg{opacity:1}
+    .nav-badge{position:absolute;right:1rem;background:#64333C;color:var(--white);font-size:0.52rem;font-weight:500;padding:0.1rem 0.45rem;border-radius:10px;min-width:18px;text-align:center}
+    .sb-footer{padding:1rem 1.5rem;border-top:1px solid rgba(201,165,154,0.2)}
+    .sb-signout{font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink);cursor:pointer;transition:color 0.3s;background:none;border:none;font-family:var(--fb);font-weight:600;display:flex;align-items:center;gap:0.5rem}
+    .sb-signout:hover{color:#64333C}
+    .sb-signout svg{width:13px;height:13px;stroke:currentColor;fill:none}
+
+    /* ── MAIN ── */
+    .main{flex:1;margin-left:var(--sw);min-height:100vh;display:flex;flex-direction:column}
+    .topbar{background:var(--white);border-bottom:1px solid rgba(201,165,154,0.15);padding:1rem clamp(1.2rem,3vw,2.5rem);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;position:sticky;top:0;z-index:40}
+    .topbar-left{display:flex;align-items:center;gap:1rem}
+    .menu-toggle{display:none;background:none;border:none;cursor:pointer;color:var(--ink)}
+    .menu-toggle svg{width:20px;height:20px;stroke:currentColor;fill:none}
+    .page-title{font-family:var(--fd);font-size:1.5rem;font-weight:300;color:var(--ink)}
+    .topbar-right{display:flex;align-items:center;gap:1rem}
+    .notif-btn{position:relative;background:none;border:none;cursor:pointer;color:var(--muted);transition:color 0.3s;padding:0.3rem}
+    .notif-btn:hover{color:#64333C}
+    .notif-btn svg{width:18px;height:18px;stroke:currentColor;fill:none}
+    .notif-dot{position:absolute;top:0;right:0;width:8px;height:8px;background:#64333C;border-radius:50%;border:2px solid var(--white);display:none}
+
+    .content{padding:clamp(1.5rem,3vw,2.5rem);flex:1}
+    .page{display:none}.page.active{display:block}
+
+    /* ── CARD ── */
+    .card{background:var(--white);border:1px solid rgba(201,165,154,0.15);padding:1.5rem;margin-bottom:1.2rem}
+    .card-title{font-family:var(--fd);font-size:1.2rem;font-weight:600;color:var(--ink);margin-bottom:1.2rem;padding-bottom:0.9rem;border-bottom:1px solid rgba(201,165,154,0.15);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+    .badge{font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.25rem 0.65rem}
+    .badge-blush{background:var(--blush-p);color:var(--ink)}
+    .badge-ok  {background:rgba(76,175,130,0.12);color:var(--ok)}
+    .badge-warn{background:rgba(232,168,56,0.12);color:var(--warn)}
+    .badge-gold{background:rgba(184,150,12,0.12);color:var(--gold)}
+
+    /* ── DASHBOARD GRAPH GRID (visual at-a-glance) ── */
+    .glance-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;margin-bottom:1.4rem}
+    .glance{background:var(--white);border:1px solid rgba(201,165,154,0.15);padding:1.4rem 1rem 1.2rem;text-align:center;position:relative;overflow:hidden;transition:all 0.3s}
+    .glance::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#ddb9ab,#64333C);transform:scaleX(0);transform-origin:left;transition:transform 0.3s var(--ease)}
+    .glance:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(201,165,154,0.18);border-color:rgba(201,165,154,0.3)}
+    .glance:hover::after{transform:scaleX(1)}
+    .glance-ring{position:relative;width:96px;height:96px;margin:0 auto 0.7rem}
+    .glance-ring svg{width:96px;height:96px;transform:rotate(-90deg)}
+    .glance-bg{fill:none;stroke:rgba(201,165,154,0.14);stroke-width:7}
+    .glance-fill{fill:none;stroke-width:7;stroke-linecap:round;transition:stroke-dasharray 1.1s var(--ease)}
+    .glance-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.05rem}
+    .glance-val{font-family:var(--fd);font-size:1.7rem;font-weight:300;color:var(--ink);line-height:1}
+    .glance-unit{font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted-l)}
+    .glance-label{font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;font-weight:500}
+    .glance-sub{font-size:0.7rem;color:var(--muted-l);margin-top:0.2rem}
+
+    /* sparkline strip on home */
+    .spark-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.4rem}
+    @media(max-width:680px){.spark-row{grid-template-columns:1fr}}
+    .spark-card{background:var(--white);border:1px solid rgba(201,165,154,0.15);padding:1.2rem 1.4rem}
+    .spark-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.8rem}
+    .spark-head h4{font-family:var(--fd);font-size:1.05rem;font-weight:500}
+    .spark-num{font-family:var(--fd);font-size:1.4rem;color:var(--blush)}
+    .spark-sub{font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted)}
+    .spark-svg{width:100%;height:60px;display:block}
+
+    /* ── CHECKIN FORM ── */
+    .check-list{display:flex;flex-direction:column}
+    .check-item{display:flex;align-items:center;gap:0.85rem;padding:0.85rem 0;border-bottom:1px solid rgba(201,165,154,0.1);cursor:pointer}
+    .check-item:last-of-type{border-bottom:none}
+    .check-item input[type="checkbox"]{display:none}
+    .check-box{width:20px;height:20px;border:1.5px solid rgba(201,165,154,0.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.22s}
+    .check-item input:checked~.check-box{background:var(--blush);border-color:var(--blush)}
+    .check-item input:checked~.check-box::after{content:'';width:8px;height:5px;border-left:1.5px solid var(--white);border-bottom:1.5px solid var(--white);transform:rotate(-45deg) translate(1px,-1px);display:block}
+    .check-label{font-size:0.86rem;color:var(--muted);transition:color 0.22s;flex:1;line-height:1.5}
+    .check-item input:checked~.check-box~.check-label{color:var(--ink)}
+
+    /* ── SCORE METER ── */
+    .score-meter{background:var(--cream-w);border:1px solid rgba(201,165,154,0.2);padding:1rem 1.2rem;margin:1rem 0;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+    .score-num{font-family:var(--fd);font-size:2.5rem;font-weight:300;line-height:1}
+    .score-bar-wrap{flex:1;height:4px;background:rgba(201,165,154,0.2);overflow:hidden}
+    .score-bar-fill{height:100%;transition:width 0.5s var(--ease),background 0.5s}
+    .score-lbl{font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase}
+    .stat-lbl{font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted)}
+
+    /* ── FORM FIELDS ── */
+    .field-row{margin-bottom:1rem}
+    .field-row label{display:block;font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem}
+    .field-row input,.field-row textarea,.field-row select{width:100%;padding:0.78rem 1rem;background:var(--parch);border:1px solid rgba(201,165,154,0.22);color:var(--ink);font-family:var(--fb);font-weight:300;font-size:0.88rem;outline:none;transition:border-color 0.3s;border-radius:0;resize:vertical}
+    .field-row input:focus,.field-row textarea:focus,.field-row select:focus{border-color:#64333C}
+    .field-row textarea{min-height:80px}
+    .field-row select{cursor:pointer}
+    .field-note{font-size:0.7rem;color:var(--muted-l);margin-top:0.3rem;font-style:italic}
+
+    /* section heading inside a form */
+    .section-head{font-family:var(--fd);font-size:1.05rem;font-weight:600;color:var(--ink);margin:1.4rem 0 0.4rem;padding-bottom:0.4rem;border-bottom:1px solid rgba(201,165,154,0.18);letter-spacing:0.01em}
+    .section-head:first-child{margin-top:0}
+    .section-hint{font-size:0.7rem;color:var(--muted-l);margin-bottom:0.7rem;font-style:italic;line-height:1.6}
+
+    /* ── BUTTONS ── */
+    .btn-ink{display:inline-flex;align-items:center;gap:0.45rem;font-family:var(--fb);font-size:0.63rem;letter-spacing:0.18em;text-transform:uppercase;font-weight:600;padding:0.8rem 1.8rem;background:var(--ink);color:var(--cream);border:none;cursor:pointer;transition:background 0.3s;border-radius:0}
+    .btn-ink:hover{background:#64333C}
+    .btn-ink:disabled{opacity:0.5;cursor:not-allowed}
+    .btn-ghost{display:inline-flex;align-items:center;gap:0.45rem;font-family:var(--fb);font-size:0.63rem;letter-spacing:0.18em;text-transform:uppercase;font-weight:600;padding:0.8rem 1.5rem;background:transparent;color:var(--ink);border:1px solid rgba(201,165,154,0.35);cursor:pointer;transition:all 0.3s;border-radius:0}
+    .btn-ghost:hover{border-color:var(--blush);color:var(--blush)}
+    .btn-blush{display:inline-flex;align-items:center;gap:0.45rem;font-family:var(--fb);font-size:0.63rem;letter-spacing:0.18em;text-transform:uppercase;font-weight:600;padding:0.8rem 1.8rem;background:#64333C;color:#FDFDFA;border:none;cursor:pointer;transition:all 0.3s;border-radius:0}
+    .btn-blush:hover{background:#8B4A54}
+
+    /* ── ALERTS ── */
+    .alert{padding:0.75rem 1rem;font-size:0.8rem;margin-bottom:1rem;display:none;line-height:1.6;align-items:center;gap:0.5rem}
+    .alert.show{display:flex}
+    .alert-ok {background:rgba(76,175,130,0.1);border:1px solid rgba(76,175,130,0.25);color:var(--ok)}
+    .alert-err{background:rgba(224,64,64,0.08);border:1px solid rgba(224,64,64,0.2);color:var(--err)}
+
+    /* ── INDUCTION JOURNEY (Week 0-6) ── */
+    .journey-intro{background:linear-gradient(135deg,rgba(201,165,154,0.08),rgba(237,216,211,0.18));border:1px solid rgba(201,165,154,0.2);padding:1.4rem 1.6rem;margin-bottom:1.4rem}
+    .journey-intro h3{font-family:var(--fd);font-size:1.4rem;font-weight:600;margin-bottom:0.4rem}
+    .journey-intro p{font-size:0.84rem;color:var(--muted);line-height:1.7;max-width:680px}
+    .title-edit-btn{font-size:0.55rem;letter-spacing:0.14em;text-transform:uppercase;background:rgba(201,165,154,0.15);border:1px solid rgba(201,165,154,0.3);color:var(--muted);cursor:pointer;padding:0.2rem 0.6rem;margin-left:0.7rem;vertical-align:middle;display:none;transition:all 0.2s}
+    .title-edit-btn:hover{background:rgba(201,165,154,0.3);color:var(--ink)}
+    .title-edit-input{font-family:var(--fd);font-size:1.4rem;font-weight:600;border:none;border-bottom:1px solid var(--blush);background:transparent;outline:none;color:var(--ink);width:100%;max-width:400px}
+    .journey-progress-wrap{margin-top:1rem}
+    .journey-progress-bar{height:6px;background:rgba(201,165,154,0.2);overflow:hidden;margin-top:0.5rem}
+    .journey-progress-fill{height:100%;background:linear-gradient(90deg,#ddb9ab,#64333C);transition:width 0.8s var(--ease)}
+    .journey-progress-lbl{display:flex;justify-content:space-between;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-top:0.5rem}
+
+    .week-list{display:flex;flex-direction:column;gap:1rem}
+    .week-card{background:var(--white);border:1px solid rgba(201,165,154,0.18);padding:1.4rem 1.5rem;position:relative;overflow:hidden;transition:all 0.3s}
+    .week-card.completed{border-color:rgba(76,175,130,0.3);background:linear-gradient(135deg,var(--white),rgba(76,175,130,0.02))}
+    .week-card.assessment{border-color:rgba(184,150,12,0.35);background:linear-gradient(135deg,var(--white),rgba(184,150,12,0.04))}
+    .week-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:0.5rem}
+    .week-num{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:var(--blush-p);color:var(--ink);font-family:var(--fd);font-size:0.72rem;font-weight:500;flex-shrink:0;letter-spacing:0.06em;text-align:center;line-height:1.2}
+    .week-card.completed .week-num{background:var(--ok);color:var(--white)}
+    .week-card.assessment .week-num{background:var(--gold);color:var(--white)}
+    .week-meta{flex:1}
+    .week-title{font-family:var(--fd);font-size:1.25rem;font-weight:600;color:var(--ink);line-height:1.2}
+    .week-focus{font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--blush);margin-top:0.2rem}
+    .week-desc{font-size:0.84rem;color:var(--muted);line-height:1.7;margin:0.7rem 0 0.9rem}
+    .week-actions{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.6rem;padding-top:0.7rem;border-top:1px solid rgba(201,165,154,0.12)}
+    .week-action-item{font-size:0.78rem;color:var(--ink);padding:0.7rem 0.9rem;background:rgba(201,165,154,0.07);border-left:2px solid var(--blush);margin-top:0.6rem;line-height:1.6}
+    .week-action-item strong{font-weight:600;color:var(--blush);font-size:0.6rem;letter-spacing:0.16em;text-transform:uppercase;display:block;margin-bottom:0.2rem}
+    .week-resource{display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.85rem;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;background:var(--parch);border:1px solid rgba(201,165,154,0.25);color:var(--ink);cursor:pointer;transition:all 0.2s;text-decoration:none}
+    .week-resource:hover{border-color:var(--blush);color:var(--blush)}
+    .week-resource.disabled{opacity:0.4;cursor:not-allowed}
+    .week-mark{display:inline-flex;align-items:center;gap:0.4rem;font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);cursor:pointer;margin-left:auto}
+    .week-mark input{accent-color:var(--blush);width:16px;height:16px}
+    .week-mark.done{color:var(--ok)}
+
+    /* ── ASSESSMENT (Week 5 filmed class) ── */
+    .assessment-card{background:linear-gradient(135deg,rgba(184,150,12,0.04),rgba(184,150,12,0.01));border:1px solid rgba(184,150,12,0.25);padding:1.4rem;margin-top:0.8rem}
+    .assessment-status{display:inline-block;font-size:0.6rem;letter-spacing:0.16em;text-transform:uppercase;padding:0.3rem 0.7rem;margin-bottom:0.5rem}
+    .as-submitted{background:rgba(232,168,56,0.12);color:var(--warn)}
+    .as-reviewed{background:rgba(76,175,130,0.12);color:var(--ok)}
+    .as-passed{background:rgba(76,175,130,0.18);color:var(--ok)}
+    .as-revisions{background:rgba(224,64,64,0.1);color:var(--err)}
+
+    /* ── VIDEO LIST ── */
+    .video-item{display:flex;align-items:center;gap:1rem;padding:0.9rem 1.1rem;background:var(--parch);border:1px solid rgba(201,165,154,0.15);transition:border-color 0.3s;margin-bottom:0.6rem}
+    .video-item:hover{border-color:var(--blush)}
+    .video-thumb{width:44px;height:44px;background:var(--ink);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .video-thumb svg{width:18px;height:18px;stroke:rgba(237,224,212,0.5);fill:none}
+    .video-info{flex:1;min-width:0}
+    .video-title{font-size:0.88rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .video-meta{font-size:0.7rem;color:var(--muted);margin-top:0.15rem}
+    .video-cat{font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--blush);white-space:nowrap}
+
+    /* ── NOTIFICATION PANEL ── */
+    .notif-panel{position:fixed;top:60px;right:1rem;width:320px;max-height:480px;background:var(--white);border:1px solid rgba(201,165,154,0.2);box-shadow:0 8px 40px rgba(26,22,20,0.12);z-index:200;display:none;flex-direction:column;overflow:hidden}
+    .notif-panel.open{display:flex}
+    .notif-header{padding:1rem 1.2rem;border-bottom:1px solid rgba(201,165,154,0.15);display:flex;justify-content:space-between;align-items:center}
+    .notif-header h4{font-family:var(--fd);font-size:1rem;font-weight:500}
+    .notif-mark-all{font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--blush);background:none;border:none;cursor:pointer}
+    .notif-list{overflow-y:auto;flex:1}
+    .notif-item{padding:0.9rem 1.2rem;border-bottom:1px solid rgba(201,165,154,0.1);cursor:pointer;transition:background 0.2s;position:relative}
+    .notif-item:hover{background:var(--parch)}
+    .notif-item.unread{background:rgba(201,165,154,0.06)}
+    .notif-item.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#64333C}
+    .notif-item-title{font-size:0.82rem;color:var(--ink);font-weight:500}
+    .notif-item-msg{font-size:0.76rem;color:var(--muted);margin-top:0.2rem;line-height:1.5}
+    .notif-item-time{font-size:0.66rem;color:var(--muted-l);margin-top:0.35rem}
+    .notif-empty{padding:2rem;text-align:center;font-size:0.82rem;color:var(--muted)}
+
+    /* ── HISTORY TABLE ── */
+    .tbl-wrap{overflow-x:auto}
+    .tbl{width:100%;border-collapse:collapse}
+    .tbl th{font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);text-align:left;padding:0.55rem 0.9rem;background:var(--cream-w);font-weight:500}
+    .tbl td{font-size:0.8rem;color:var(--muted);padding:0.75rem 0.9rem;border-bottom:1px solid rgba(201,165,154,0.1)}
+    .tbl tr:last-child td{border-bottom:none}
+    .score-pill{display:inline-block;padding:0.2rem 0.55rem;font-size:0.66rem;font-weight:500}
+    .sp-hi{background:rgba(76,175,130,0.1);color:var(--ok)}
+    .sp-md{background:rgba(232,168,56,0.1);color:var(--warn)}
+    .sp-lo{background:rgba(224,64,64,0.08);color:var(--err)}
+    .tick{color:var(--ok)}.cross{color:rgba(0,0,0,0.15)}
+
+    /* ── NOTES ── */
+    .note-card{padding:1rem;background:var(--parch);border:1px solid rgba(201,165,154,0.15);margin-bottom:0.7rem}
+    .note-title{font-family:var(--fd);font-size:1.05rem;font-weight:600;color:var(--ink)}
+    .note-body{font-size:0.82rem;color:var(--muted);margin-top:0.4rem;line-height:1.7}
+    .note-footer{display:flex;justify-content:space-between;align-items:center;margin-top:0.6rem;flex-wrap:wrap;gap:0.5rem}
+    .note-date{font-size:0.68rem;color:var(--muted-l)}
+
+    /* ── CHANGE PASSWORD ── */
+    .pw-strength{height:3px;background:rgba(201,165,154,0.15);overflow:hidden;margin-top:0.4rem}
+    .pw-strength-fill{height:100%;transition:width 0.4s,background 0.4s;width:0}
+
+    /* ── UPLOAD PROGRESS ── */
+    .upload-progress{display:none;margin-top:0.8rem}
+    .upload-bar{height:4px;background:rgba(201,165,154,0.2);overflow:hidden}
+    .upload-fill{height:100%;background:var(--blush);width:0;transition:width 0.3s}
+    .upload-label{font-size:0.72rem;color:var(--muted);margin-top:0.3rem}
+
+    /* ── MOBILE ── */
+    .mobile-overlay{display:none;position:fixed;inset:0;background:rgba(26,22,20,0.5);z-index:49}
+    @media(max-width:768px){
+      .sidebar{transform:translateX(-100%)}
+      .sidebar.open{transform:translateX(0)}
+      .mobile-overlay.open{display:block}
+      .main{margin-left:0}
+      .menu-toggle{display:flex}
+      .glance-grid{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:480px){
+      .glance-grid{grid-template-columns:1fr 1fr}
+      .glance-ring{width:80px;height:80px}.glance-ring svg{width:80px;height:80px}
+    }
+    /* Video modal + notes */
+    .vmodal{display:none;position:fixed;inset:0;background:rgba(20,16,14,0.78);z-index:9999;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px)}
+    .vmodal.open{display:flex}
+    .vmodal-box{background:var(--white);max-width:1100px;width:100%;max-height:92vh;display:flex;flex-direction:column;border:1px solid rgba(201,165,154,0.25);box-shadow:0 30px 80px rgba(20,16,14,0.4);position:relative}
+    .vmodal-x{position:absolute;top:0.4rem;right:0.6rem;background:none;border:none;font-size:1.8rem;color:var(--muted);cursor:pointer;line-height:1;padding:0.2rem 0.6rem;z-index:2}
+    .vmodal-x:hover{color:var(--ink)}
+    .vmodal-head{padding:1rem 1.4rem 0.6rem;border-bottom:1px solid rgba(201,165,154,0.15)}
+    .vmodal-title{font-family:var(--fd);font-size:1.2rem;color:var(--ink);font-weight:600;padding-right:2rem}
+    .vmodal-body{display:grid;grid-template-columns:1.6fr 1fr;gap:0;flex:1;min-height:0;overflow:hidden}
+    .vmodal-player{background:#000;display:flex;align-items:center;justify-content:center;min-height:300px}
+    .vmodal-player video{width:100%;height:100%;max-height:70vh;background:#000;object-fit:contain}
+    .sondr-watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:20;pointer-events:none;user-select:none;color:rgba(253,253,250,0.68);font-family:var(--fd);font-size:clamp(1.6rem,5vw,4.4rem);letter-spacing:0.08em;text-shadow:0 2px 16px rgba(0,0,0,0.65);mix-blend-mode:screen;white-space:nowrap}
+    .vmodal-notes{display:flex;flex-direction:column;border-left:1px solid rgba(201,165,154,0.15);background:var(--parch);min-height:0}
+    .vmodal-notes-title{padding:0.9rem 1.1rem;font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink);border-bottom:1px solid rgba(201,165,154,0.15);font-weight:500;margin:0}
+    .vmodal-nc{display:inline-block;background:var(--blush);color:var(--white);padding:0.1rem 0.5rem;font-size:0.62rem;margin-left:0.4rem;border-radius:999px}
+    .vmodal-notes-list{flex:1;overflow-y:auto;padding:0.4rem 1.1rem}
+    .vmodal-note{padding:0.7rem 0;border-bottom:1px solid rgba(201,165,154,0.12)}
+    .vmodal-note:last-child{border-bottom:none}
+    .vmodal-note-author{font-size:0.74rem;color:var(--ink);font-weight:500;margin-bottom:0.2rem}
+    .vmodal-note-body{font-size:0.84rem;color:var(--ink);line-height:1.6;white-space:pre-wrap;margin:0 0 0.3rem}
+    .vmodal-note-meta{font-size:0.66rem;color:var(--muted-l);display:flex;justify-content:space-between;align-items:center}
+    .vmodal-note-del{background:none;border:none;color:var(--err);font-size:0.66rem;cursor:pointer;opacity:0.6}
+    .vmodal-note-del:hover{opacity:1}
+    .vmodal-form{padding:0.8rem 1.1rem;border-top:1px solid rgba(201,165,154,0.15);background:var(--white)}
+    .vmodal-form textarea{width:100%;border:1px solid rgba(201,165,154,0.3);background:var(--white);padding:0.6rem 0.7rem;font-family:inherit;font-size:0.86rem;color:var(--ink);resize:vertical;margin-bottom:0.5rem;outline:none;border-radius:0}
+    .vmodal-form textarea:focus{border-color:#64333C}
+    .vmodal-done-row{display:flex;align-items:center;justify-content:space-between;padding:0.7rem 1.4rem;background:rgba(100,51,60,0.04);border-bottom:1px solid rgba(201,165,154,0.15);gap:1rem;flex-wrap:wrap}
+    .vmodal-done-label{display:flex;align-items:center;gap:0.6rem;cursor:pointer;font-size:0.78rem;color:var(--muted);user-select:none}
+    .vmodal-done-label input[type=checkbox]{accent-color:#64333C;width:16px;height:16px;cursor:pointer;flex-shrink:0}
+    .vmodal-done-label.is-done{color:#4CAF82;font-weight:500}
+    .vmodal-done-completions{font-size:0.68rem;color:var(--muted-l);letter-spacing:0.04em}
+    @media(max-width:880px){.vmodal-body{grid-template-columns:1fr}.vmodal-notes{border-left:none;border-top:1px solid rgba(201,165,154,0.15);max-height:40vh}.vmodal-player video{max-height:42vh}}
+  </style>
+</head>
+<body>
+
+<div class="mobile-overlay" id="overlay" onclick="closeSB()"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-top">
+    <div class="sb-logo">
+      <svg width="22" height="34" viewBox="79 59 407 628" xmlns="http://www.w3.org/2000/svg" style="display:block;flex-shrink:0">
+        <path fill="#ddb9ab" fill-rule="evenodd" d="M 281.6668 74.0653 C 178.5618 74.0653 94.6788 157.9473 94.6788 261.0533 L 94.6788 483.1733 C 94.6788 586.2793 178.5618 670.1613 281.6668 670.1613 C 384.7718 670.1613 468.6548 586.2793 468.6548 483.1733 L 468.6548 261.0533 C 468.6548 157.9473 384.7718 74.0653 281.6668 74.0653 M 281.6668 683.1743 C 171.3868 683.1743 81.6668 593.4543 81.6668 483.1733 L 81.6668 261.0533 C 81.6668 150.7733 171.3868 61.0533 281.6668 61.0533 C 391.9468 61.0533 481.6668 150.7733 481.6668 261.0533 L 481.6668 483.1733 C 481.6668 593.4543 391.9468 683.1743 281.6668 683.1743"/>
+        <path fill="#ddb9ab" fill-rule="evenodd" d="M 215.0394 357.5759 C 214.4424 338.4699 231.6444 326.9019 254.5314 323.5149 C 295.5964 341.0929 344.6494 351.9019 344.6494 384.3369 C 344.6494 395.9539 338.0014 413.6079 312.2574 420.0909 C 269.7934 402.4439 216.3214 394.2169 215.0394 357.5759 M 319.4654 423.2359 C 345.3014 416.4339 364.2274 399.5969 363.7724 369.1599 C 362.5574 292.3659 217.1634 309.6669 215.0394 248.9599 C 214.2564 223.9249 243.9744 211.8749 277.0674 214.1829 C 277.0674 214.1829 320.1664 215.3409 359.2814 241.7999 L 356.4874 214.3569 C 356.4874 214.3569 317.3314 207.6789 276.6574 208.8929 C 210.7894 210.7149 199.2554 248.9599 199.5594 265.3499 C 200.0374 293.4399 222.6414 309.2409 249.8674 321.4719 C 207.5154 331.1829 199.3024 360.1079 199.5594 373.9659 C 200.7734 445.2969 344.6494 437.4049 344.6494 492.9529 C 344.6494 507.2179 334.6324 530.5909 291.5304 531.1979 C 286.6614 531.2669 281.7754 531.0589 276.9244 530.5529 L 276.9214 530.5599 C 276.9214 530.5599 276.6144 530.5309 276.0484 530.4659 C 272.6454 530.0839 269.2424 529.6349 265.9224 528.8209 C 246.7054 524.1079 226.2264 515.5319 203.0184 490.5239 L 205.6294 520.8779 C 227.7884 528.4669 244.4814 536.0549 291.5304 535.4479 C 330.3824 534.8399 364.3794 518.4489 363.7724 477.7759 C 363.3334 449.9999 344.0274 434.5359 319.4654 423.2359"/>
+      </svg>
+      <span class="sb-logo-text">sondr.<em>STUDIO</em></span>
+    </div>
+  </div>
+  <div class="sb-user">
+    <div class="sb-user-row">
+      <div class="sb-avatar" id="sb-avatar">?</div>
+      <div>
+        <p class="sb-name" id="sb-name">Loading…</p>
+        <p class="sb-role" id="sb-role" style="display:none"></p>
+      </div>
+    </div>
+  </div>
+  <nav class="sb-nav">
+    <p class="nav-section">Main</p>
+    <a class="nav-item active" onclick="goPage('home')">
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+      Dashboard
+    </a>
+
+    <p class="nav-section">Daily Log</p>
+    <a class="nav-item" onclick="goPage('checkin')">
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      Daily Check-In
+    </a>
+    <a class="nav-item" onclick="goPage('practice')">
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      Self-Practice Log
+    </a>
+    <a class="nav-item" onclick="goPage('obslog')">
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+      Observation Log
+    </a>
+    <a class="nav-item" onclick="goPage('weekly')">
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+      Weekly Check-In
+    </a>
+    <a class="nav-item" onclick="goPage('weeklyreport')">
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      Weekly Report
+    </a>
+
+    <p class="nav-section">Training</p>
+    <a class="nav-item" onclick="goPage('induction')">
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+      Sondr Fundamentals
+      <span class="nav-badge" id="nb-induction" style="display:none">0</span>
+    </a>
+    <a class="nav-item" onclick="goPage('training')">
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M15 10l4.553-2.277A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/></svg>
+      Ongoing Development
+      <span class="nav-badge" id="nb-videos" style="display:none">0</span>
+    </a>
+    <a class="nav-item" onclick="goPage('myvideos')">
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+      Upload Video
+    </a>
+    <a class="nav-item" onclick="goPage('notes')">
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+      My Notes
+    </a>
+    <a class="nav-item" onclick="goPage('messages')" id="nav-messages">
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.86 9.86 0 01-4-.8L3 20l1.3-3.9A7.96 7.96 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+      Messages
+      <span class="nav-badge" id="nb-messages" style="display:none">0</span>
+    </a>
+
+    <p class="nav-section">Account</p>
+    <a class="nav-item" onclick="goPage('history')">
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      Check-In History
+    </a>
+    <a class="nav-item" onclick="goPage('settings')">
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>
+      Settings
+    </a>
+  </nav>
+  <div class="sb-footer">
+    <button class="sb-signout" onclick="signOut()">
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+      Sign Out
+    </button>
+  </div>
+</aside>
+
+<!-- NOTIFICATION PANEL -->
+<div class="notif-panel" id="notif-panel">
+  <div class="notif-header">
+    <h4>Notifications</h4>
+    <button class="notif-mark-all" onclick="markAllRead()">Mark all read</button>
+  </div>
+  <div class="notif-list" id="notif-list"><p class="notif-empty">No notifications yet.</p></div>
+</div>
+
+<!-- FEEDBACK MODAL — prominent can't-miss popup -->
+<div id="feedback-modal" style="display:none;position:fixed;inset:0;background:rgba(20,16,14,0.65);z-index:9990;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(3px)" onclick="if(event.target===this)closeFbModal()">
+  <div style="background:var(--white);max-width:480px;width:100%;padding:0;border:1px solid rgba(100,51,60,0.25);box-shadow:0 24px 64px rgba(20,16,14,0.3);position:relative;animation:slideUp 0.28s ease">
+    <div style="background:#64333C;padding:1.2rem 1.5rem;display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:0.6rem">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.86 9.86 0 01-4-.8L3 20l1.3-3.9A7.96 7.96 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+        <span style="font-family:var(--fd);font-size:1.1rem;font-weight:600;color:#FDFDFA">New Feedback</span>
+      </div>
+      <button onclick="closeFbModal()" style="background:none;border:none;color:rgba(255,255,255,0.75);font-size:1.6rem;cursor:pointer;line-height:1;padding:0.1rem 0.3rem">×</button>
+    </div>
+    <div style="padding:1.4rem 1.5rem">
+      <p style="font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:#64333C;margin-bottom:0.6rem" id="fb-modal-from">From Gagan</p>
+      <p style="font-size:0.9rem;color:var(--ink);line-height:1.75;white-space:pre-wrap" id="fb-modal-body"></p>
+      <p style="font-size:0.65rem;color:var(--muted-l);margin-top:1rem" id="fb-modal-date"></p>
+    </div>
+    <div style="padding:0 1.5rem 1.2rem;display:flex;justify-content:flex-end;gap:0.5rem">
+      <button onclick="closeFbModal()" style="font-family:var(--fb);font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;padding:0.6rem 1.4rem;background:var(--ink);color:var(--cream);border:none;cursor:pointer">Dismiss</button>
+    </div>
+  </div>
+</div>
+
+<!-- BROADCAST MODAL -->
+<div id="broadcast-modal" style="display:none;position:fixed;inset:0;background:rgba(20,16,14,0.55);z-index:9989;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(2px)" onclick="if(event.target===this)closeBCModal()">
+  <div style="background:var(--white);max-width:460px;width:100%;padding:0;border:1px solid rgba(201,165,154,0.3);box-shadow:0 20px 50px rgba(20,16,14,0.2);position:relative;animation:slideUp 0.28s ease">
+    <div style="background:var(--ink);padding:1.1rem 1.5rem;display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:0.6rem">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(237,224,212,0.85)" stroke-width="1.8"><path d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
+        <span style="font-family:var(--fd);font-size:1.1rem;font-weight:600;color:#FDFDFA" id="bc-modal-title">Message from Sondr</span>
+      </div>
+      <button onclick="closeBCModal()" style="background:none;border:none;color:rgba(255,255,255,0.6);font-size:1.6rem;cursor:pointer;line-height:1;padding:0.1rem 0.3rem">×</button>
+    </div>
+    <div style="padding:1.4rem 1.5rem">
+      <p style="font-size:0.9rem;color:var(--ink);line-height:1.75;white-space:pre-wrap" id="bc-modal-body"></p>
+      <p style="font-size:0.65rem;color:var(--muted-l);margin-top:1rem" id="bc-modal-date"></p>
+    </div>
+    <div style="padding:0 1.5rem 1.2rem;display:flex;justify-content:flex-end">
+      <button onclick="closeBCModal()" style="font-family:var(--fb);font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;padding:0.6rem 1.4rem;background:var(--ink);color:var(--cream);border:none;cursor:pointer">Got it</button>
+    </div>
+  </div>
+</div>
+
+<!-- NOTE VIEWER MODAL -->
+<div id="note-viewer-modal" style="display:none;position:fixed;inset:0;background:rgba(20,16,14,0.6);z-index:9988;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(3px)" onclick="if(event.target===this)closeNoteModal()">
+  <div style="background:var(--white);max-width:640px;width:100%;max-height:80vh;display:flex;flex-direction:column;border:1px solid rgba(201,165,154,0.2);box-shadow:0 20px 60px rgba(20,16,14,0.25);position:relative;animation:slideUp 0.25s ease">
+    <div style="padding:1rem 1.4rem;border-bottom:1px solid rgba(201,165,154,0.15);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+      <p style="font-family:var(--fd);font-size:1.1rem;color:var(--ink)" id="note-viewer-title"></p>
+      <button onclick="closeNoteModal()" style="background:none;border:none;font-size:1.6rem;color:var(--muted);cursor:pointer;padding:0.1rem 0.4rem">×</button>
+    </div>
+    <div style="overflow-y:auto;flex:1;padding:1.2rem 1.4rem">
+      <p style="font-size:0.84rem;color:var(--ink);line-height:1.85;white-space:pre-wrap" id="note-viewer-body"></p>
+    </div>
+    <div style="padding:0.8rem 1.4rem;border-top:1px solid rgba(201,165,154,0.1);font-size:0.65rem;color:var(--muted-l)" id="note-viewer-meta"></div>
+  </div>
+</div>
+
+<style>
+@keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+#feedback-modal.open,#broadcast-modal.open,#note-viewer-modal.open{display:flex}
+</style>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="menu-toggle" onclick="openSB()"><svg viewBox="0 0 24 24" stroke-width="1.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+      <h1 class="page-title" id="pg-title">Dashboard</h1>
+    </div>
+    <div class="topbar-right">
+      <button class="notif-btn" onclick="toggleNotifPanel()" id="notif-toggle" aria-label="Notifications">
+        <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+        <span class="notif-dot" id="notif-dot"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ───────── HOME (visual at-a-glance) ───────── -->
+    <div class="page active" id="page-home">
+      <div class="glance-grid" id="glance-grid">
+        <div class="glance">
+          <p class="glance-label">Compliance</p>
+          <div class="glance-ring">
+            <svg viewBox="0 0 100 100"><circle class="glance-bg" cx="50" cy="50" r="42"/><circle class="glance-fill" id="ring-comp" cx="50" cy="50" r="42" stroke="#4CAF82" stroke-dasharray="0 263.9"/></svg>
+            <div class="glance-center"><span class="glance-val" id="g-comp">—</span><span class="glance-unit">/ 6</span></div>
+          </div>
+          <p class="glance-sub">30-day average</p>
+        </div>
+        <div class="glance">
+          <p class="glance-label">Daily Check-Ins</p>
+          <div class="glance-ring">
+            <svg viewBox="0 0 100 100"><circle class="glance-bg" cx="50" cy="50" r="42"/><circle class="glance-fill" id="ring-ci" cx="50" cy="50" r="42" stroke="#C9A59A" stroke-dasharray="0 263.9"/></svg>
+            <div class="glance-center"><span class="glance-val" id="g-ci">—</span><span class="glance-unit">this month</span></div>
+          </div>
+          <p class="glance-sub">Goal: every workday</p>
+        </div>
+        <div class="glance">
+          <p class="glance-label">Self-Practice</p>
+          <div class="glance-ring">
+            <svg viewBox="0 0 100 100"><circle class="glance-bg" cx="50" cy="50" r="42"/><circle class="glance-fill" id="ring-sp" cx="50" cy="50" r="42" stroke="#B8960C" stroke-dasharray="0 263.9"/></svg>
+            <div class="glance-center"><span class="glance-val" id="g-sp">—</span><span class="glance-unit">this month</span></div>
+          </div>
+          <p class="glance-sub">Goal: 8 sessions / month</p>
+        </div>
+        <div class="glance">
+          <p class="glance-label">Observations</p>
+          <div class="glance-ring">
+            <svg viewBox="0 0 100 100"><circle class="glance-bg" cx="50" cy="50" r="42"/><circle class="glance-fill" id="ring-obs" cx="50" cy="50" r="42" stroke="#7A6A64" stroke-dasharray="0 263.9"/></svg>
+            <div class="glance-center"><span class="glance-val" id="g-obs">—</span><span class="glance-unit">this wk</span></div>
+          </div>
+          <p class="glance-sub">Goal: 6 / week</p>
+        </div>
+      </div>
+
+      <div class="spark-row">
+        <div class="spark-card">
+          <div class="spark-head">
+            <div><h4>Check-Ins</h4><p class="spark-sub">Last 14 days</p></div>
+            <span class="spark-num" id="spark-ci-n">0</span>
+          </div>
+          <svg class="spark-svg" id="spark-ci" viewBox="0 0 280 60" preserveAspectRatio="none"></svg>
+        </div>
+        <div class="spark-card">
+          <div class="spark-head">
+            <div><h4>Self-Practice</h4><p class="spark-sub">Last 14 days</p></div>
+            <span class="spark-num" id="spark-sp-n">0h</span>
+          </div>
+          <svg class="spark-svg" id="spark-sp" viewBox="0 0 280 60" preserveAspectRatio="none"></svg>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Today <span class="badge badge-blush" id="today-badge">—</span></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.8rem">
+          <button class="btn-ink" onclick="goPage('checkin')">Submit Check-In</button>
+          <button class="btn-blush" onclick="goPage('practice')">Open Class Format Log</button>
+          <button class="btn-ghost" onclick="goPage('induction')">Open Sondr Fundamentals</button>
+        </div>
+      </div>
+
+      <div class="card" id="owner-videos-home" style="display:none">
+        <div class="card-title">New Training Material <span class="badge badge-blush" id="new-vid-count"></span></div>
+        <div id="owner-vids-list"><p style="font-size:0.82rem;color:var(--muted)">Loading…</p></div>
+      </div>
+
+      <div class="card" id="feedback-home" style="display:none">
+        <div class="card-title">Feedback from Gagan <span class="badge badge-gold" id="fb-count"></span></div>
+        <div id="feedback-list"></div>
+      </div>
+    </div>
+
+    <!-- ───────── DAILY CHECK-IN ───────── -->
+    <div class="page" id="page-checkin">
+      <!-- Section identity bar -->
+      <div class="section-identity" style="border-left:4px solid #4CAF82;background:rgba(76,175,130,0.05);padding:0.8rem 1.2rem;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem">
+        <div>
+          <p style="font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:#4CAF82;font-weight:500">Daily Log · Step 1 of 2</p>
+          <p style="font-family:var(--fd);font-size:1.1rem;color:var(--ink)">Daily Check-In — filled before leaving the studio</p>
+        </div>
+        <div id="ci-task-counter" style="font-size:0.68rem;color:var(--muted)">Loading…</div>
+      </div>
+      <div class="alert alert-ok" id="ci-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Check-in submitted successfully!</div>
+      <div class="alert alert-err" id="ci-err"></div>
+      <div id="ci-capped-msg" class="alert alert-warn" style="display:none;background:rgba(232,168,56,0.08);border:1px solid rgba(232,168,56,0.3);color:var(--warn);padding:0.75rem 1rem;font-size:0.82rem;margin-bottom:1rem;align-items:center;gap:0.5rem">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+        You've completed your 2 tasks for today. Come back tomorrow!
+      </div>
+      <!-- Tabs -->
+      <div class="ci-tabs" style="display:flex;gap:0;margin-bottom:1.2rem;border-bottom:1px solid rgba(201,165,154,0.2)">
+        <button class="ci-tab active" id="ci-tab-accountability" onclick="switchCITab('accountability')" style="font-family:var(--fb);font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;padding:0.75rem 1.4rem;background:none;border:none;border-bottom:2px solid var(--ok);color:var(--ok);cursor:pointer;transition:all 0.2s;font-weight:500">
+          Classes Accountability
+        </button>
+        <button class="ci-tab" id="ci-tab-glance" onclick="switchCITab('glance')" style="font-family:var(--fb);font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;padding:0.75rem 1.4rem;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);cursor:pointer;transition:all 0.2s;font-weight:500">
+          Day at a Glance
+        </button>
+      </div>
+      <form id="checkin-form">
+        <!-- Tab 1: Classes Accountability -->
+        <div id="ci-panel-accountability">
+          <div class="card" style="border-left:3px solid #4CAF82">
+            <div class="card-title">Classes Accountability <span class="badge badge-ok">6 criteria</span></div>
+            <p style="font-size:0.78rem;color:var(--muted);margin-bottom:1rem;line-height:1.7">Tick each item that applies to today's class. Leave blank if you did not teach today.</p>
+            <div class="check-list">
+              <label class="check-item"><input type="checkbox" name="class_delivered"/><div class="check-box"></div><span class="check-label">I delivered my scheduled classes today</span></label>
+              <label class="check-item"><input type="checkbox" name="arrived_on_time"/><div class="check-box"></div><span class="check-label">I arrived 10 minutes before classes</span></label>
+              <label class="check-item"><input type="checkbox" name="props_prepped"/><div class="check-box"></div><span class="check-label">I prepped all props and equipment before clients arrived</span></label>
+              <label class="check-item"><input type="checkbox" name="modifications_offered"/><div class="check-box"></div><span class="check-label">I offered modifications and progressions throughout the classes</span></label>
+              <label class="check-item"><input type="checkbox" name="used_names"/><div class="check-box"></div><span class="check-label">I used client names during the session</span></label>
+              <label class="check-item"><input type="checkbox" name="closed_mindfully"/><div class="check-box"></div><span class="check-label">I closed the classes mindfully and on time</span></label>
+            </div>
+            <div class="score-meter" id="score-meter">
+              <div>
+                <p class="stat-lbl">Compliance Score</p>
+                <p class="score-num" id="score-num">0<span style="font-size:1.2rem;color:var(--muted)">/6</span></p>
+              </div>
+              <div style="flex:1">
+                <div class="score-bar-wrap"><div class="score-bar-fill" id="score-fill"></div></div>
+                <p class="score-lbl" id="score-lbl" style="color:var(--muted);margin-top:0.4rem"></p>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem">
+            <button type="button" class="btn-ghost" onclick="switchCITab('glance')">Next: Day at a Glance →</button>
+          </div>
+        </div>
+
+        <!-- Tab 2: Day at a Glance -->
+        <div id="ci-panel-glance" style="display:none">
+          <div class="card" style="border-left:3px solid var(--blush)">
+            <div class="card-title">Day at a Glance <span class="badge badge-blush">End-of-day</span></div>
+            <p style="font-size:0.78rem;color:var(--muted);margin-bottom:1.2rem;line-height:1.7">Quick snapshot of your day. Leave items blank where they don't apply.</p>
+            <div class="field-row">
+              <label>Did you arrive early today?</label>
+              <select name="arrived_early">
+                <option value="">— Leave blank if no —</option>
+                <option value="yes_10">Yes — 10+ minutes early</option>
+                <option value="yes_5">Yes — about 5 minutes early</option>
+                <option value="on_time">On time (0–2 min before)</option>
+                <option value="late">No — I was late</option>
+              </select>
+            </div>
+            <div class="field-row">
+              <label>Classes taught today</label>
+              <input type="number" name="classes_today" min="0" max="8" placeholder="e.g. 2 (leave blank if none)"/>
+            </div>
+            <div class="field-row">
+              <label>Client note to flag for Gagan <span style="font-size:0.7em;text-transform:none;letter-spacing:0;font-style:italic">(optional)</span></label>
+              <textarea name="client_note" placeholder="Injury, behaviour, concern, or positive feedback worth noting…"></textarea>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem">
+            <button type="button" class="btn-ghost" onclick="switchCITab('accountability')">← Back</button>
+            <button type="submit" class="btn-ink" id="ci-btn">Submit Check-In</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- ───────── SELF-PRACTICE ───────── -->
+    <div class="page" id="page-practice">
+      <!-- Section identity bar -->
+      <div class="section-identity" style="border-left:4px solid var(--gold);background:rgba(184,150,12,0.04);padding:0.8rem 1.2rem;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem">
+        <div>
+          <p style="font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:500">Daily Log · Step 2 of 2</p>
+          <p style="font-family:var(--fd);font-size:1.1rem;color:var(--ink)">Self-Practice Log — Sondr Essential Class Format</p>
+        </div>
+        <div style="font-size:0.72rem;color:var(--muted);background:rgba(184,150,12,0.08);border:1px solid rgba(184,150,12,0.2);padding:0.35rem 0.8rem">
+          Min. 1 video upload per week
+        </div>
+      </div>
+      <div class="alert alert-ok" id="sp-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Self-practice logged.</div>
+      <div class="alert alert-err" id="sp-err"></div>
+
+      <!-- Multi-video upload block -->
+      <div class="card" style="border-left:3px solid var(--gold);margin-bottom:1.2rem">
+        <div class="card-title">Practice Clips <span class="badge badge-gold">Min. 1 per week</span></div>
+        <p style="font-size:0.78rem;color:var(--muted);margin-bottom:1.2rem;line-height:1.7">Upload short video clips from your self-practice session. Add as many as you like using the button below.</p>
+        <div id="sp-video-slots" style="display:flex;flex-direction:column;gap:0.8rem"></div>
+        <button type="button" class="btn-ghost" onclick="addSPSlot()" style="margin-top:0.8rem;font-size:0.78rem">+ Add clip</button>
+        <div style="margin-top:1rem;padding-top:0.8rem;border-top:1px solid rgba(201,165,154,0.12);display:flex;align-items:center;gap:0.5rem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14" style="color:var(--gold);flex-shrink:0"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <p style="font-size:0.72rem;color:var(--muted-l);font-style:italic">Upload at least one clip every week. Clips are reviewed privately by Gagan.</p>
+        </div>
+        <button type="button" class="btn-ink" id="sp-clips-btn" onclick="uploadSPClips()" style="margin-top:1rem">Upload Clips</button>
+        <div class="alert alert-ok" id="sp-clips-ok" style="margin-top:0.8rem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Clips uploaded successfully!</div>
+        <div class="alert alert-err" id="sp-clips-err" style="margin-top:0.8rem"></div>
+      </div>
+
+      <!-- Sondr Essential Class Format Log -->
+      <div class="card" style="border-left:3px solid rgba(184,150,12,0.5);margin-top:1.2rem">
+        <div class="card-title">Sondr Essential Class Format <span class="badge badge-blush">Self Practice Log</span></div>
+        <p style="font-size:0.78rem;color:var(--muted);margin-bottom:1.2rem;line-height:1.6">Complete this format after each self-practice session. Your entries are saved privately to your log.</p>
+        <div class="alert alert-ok" id="clf-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Class format log saved.</div>
+        <div class="alert alert-err" id="clf-err"></div>
+        <form id="clf-form">
+          <p class="section-head" style="font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.7rem;padding-bottom:0.4rem;border-bottom:1px solid rgba(201,165,154,0.15)">1. Session Type</p>
+          <div class="field-row"><label>Class Format</label><input type="text" name="session_type" placeholder="e.g. Sondr Essential, Tower, Jumpboard…" required/></div>
+          <div class="field-row"><label>Session Duration (minutes)</label><input type="number" name="duration_minutes" min="5" max="300" placeholder="e.g. 60" required/></div>
+
+          <p class="section-head" style="font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin:1rem 0 0.7rem;padding-bottom:0.4rem;border-bottom:1px solid rgba(201,165,154,0.15)">2. Class Plan</p>
+          <div class="field-row"><label>Theme / Intention</label><textarea name="theme_intention" style="min-height:64px" placeholder="What is the purpose of this class? (e.g. spinal articulation, unilateral strength, pelvic stability)"></textarea></div>
+          <div class="field-row"><label>Warm Up (5–10 mins)</label><textarea name="warm_up" style="min-height:64px" placeholder="How are you preparing the body and grounding the class?"></textarea></div>
+          <div class="field-row"><label>First Sequence</label><textarea name="seq_1" style="min-height:80px" placeholder="Include set up, springs, layers and options to regress or progress…"></textarea></div>
+          <div class="field-row"><label>Second Sequence</label><textarea name="seq_2" style="min-height:80px" placeholder="Include set up, springs, layers and options to regress or progress…"></textarea></div>
+          <div class="field-row"><label>Third Sequence</label><textarea name="seq_3" style="min-height:80px" placeholder="Include set up, springs, layers and options to regress or progress…"></textarea></div>
+          <div class="field-row"><label>Fourth Sequence</label><textarea name="seq_4" style="min-height:80px" placeholder="Include set up, springs, layers and options to regress or progress…"></textarea></div>
+          <div class="field-row"><label>Fifth Sequence</label><textarea name="seq_5" style="min-height:80px" placeholder="Include set up, springs, layers and options to regress or progress…"></textarea></div>
+          <div class="field-row"><label>Finisher / Integration</label><textarea name="finisher" style="min-height:64px" placeholder="How are you closing the class? (core / full body / mobility)"></textarea></div>
+
+          <p class="section-head" style="font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin:1rem 0 0.7rem;padding-bottom:0.4rem;border-bottom:1px solid rgba(201,165,154,0.15)">3. Self Practice Reflection</p>
+          <div class="field-row"><label>What Felt Strong</label><textarea name="felt_strong" style="min-height:80px" placeholder="Where did the class feel smooth, controlled, and aligned with Sondr standards?"></textarea></div>
+          <div class="field-row"><label>What Needs Refinement</label><textarea name="needs_refinement" style="min-height:80px" placeholder="Be specific — transitions, flow, pauses, cueing clarity, layering, pacing…"></textarea></div>
+
+          <p class="section-head" style="font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin:1rem 0 0.7rem;padding-bottom:0.4rem;border-bottom:1px solid rgba(201,165,154,0.15)">4. Key Teaching Takeaways</p>
+          <div class="field-row"><label>2–3 clear actions you will apply in your next class</label><textarea name="teaching_takeaways" style="min-height:80px" placeholder="1.\n2.\n3."></textarea></div>
+
+          <p class="section-head" style="font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin:1rem 0 0.7rem;padding-bottom:0.4rem;border-bottom:1px solid rgba(201,165,154,0.15)">5. Cueing Practice</p>
+          <div class="field-row"><label>2–3 cues you refined or want to use in class</label><textarea name="cueing_practice" style="min-height:64px" placeholder="• \n• \n• "></textarea></div>
+
+          <p class="section-head" style="font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin:1rem 0 0.7rem;padding-bottom:0.4rem;border-bottom:1px solid rgba(201,165,154,0.15)">6. Client Lens</p>
+          <div class="field-row"><label>If you were a client in this class, how would it feel?</label><textarea name="client_lens" style="min-height:80px" placeholder="Clear or confusing? Too easy or too advanced? Where might someone get lost?"></textarea></div>
+
+          <p class="section-head" style="font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin:1rem 0 0.7rem;padding-bottom:0.4rem;border-bottom:1px solid rgba(201,165,154,0.15)">7. Next Session Focus</p>
+          <div class="field-row"><label>What will you work on next time?</label><textarea name="next_session_focus" style="min-height:64px" placeholder="What will you work on next time?"></textarea></div>
+
+          <p class="section-head" style="font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin:1rem 0 0.7rem;padding-bottom:0.4rem;border-bottom:1px solid rgba(201,165,154,0.15)">8. Additional Notes</p>
+          <div class="field-row"><label>Modifications, injuries, ideas, observations <span style="font-style:italic;font-size:0.7em">(optional)</span></label><textarea name="additional_notes" style="min-height:64px" placeholder="Any additional observations or notes…"></textarea></div>
+
+          <button type="submit" class="btn-ink" id="clf-btn" style="margin-top:0.8rem">Save Class Format Log</button>
+        </form>
+      </div>
+
+      <div class="card" style="border-left:3px solid rgba(184,150,12,0.5)">
+        <div class="card-title">My Practice Log <span class="badge badge-blush" id="sp-total">0h this month</span></div>
+        <div id="sp-list"><p style="font-size:0.82rem;color:var(--muted)">Loading…</p></div>
+      </div>
+
+      <div class="card" id="sp-clips-saved-card" style="border-left:3px solid var(--gold);display:none">
+        <div class="card-title">My Uploaded Practice Clips
+          <span class="badge badge-gold" id="sp-clips-count">0 clips</span>
+        </div>
+        <p style="font-size:0.78rem;color:var(--muted);margin-bottom:1rem;line-height:1.7">Clips you've uploaded from self-practice sessions. These are visible to Gagan on the owner dashboard.</p>
+        <div id="sp-clips-list"><p style="font-size:0.82rem;color:var(--muted)">Loading…</p></div>
+      </div>
+    </div>
+
+    <!-- ───────── INDUCTION JOURNEY (Week 0–6) ───────── -->
+    <div class="page" id="page-induction">
+      <div class="journey-intro">
+        <h3 id="induction-section-title">Sondr Fundamentals</h3>
+        <p>Welcome to Sondr Fundamentals.</p>
+        <div class="journey-progress-wrap">
+          <div class="journey-progress-bar"><div class="journey-progress-fill" id="jp-fill" style="width:0"></div></div>
+          <div class="journey-progress-lbl"><span id="jp-text">Loading…</span><span id="jp-pct">0%</span></div>
+        </div>
+      </div>
+      <div class="week-list" id="week-list"><p style="font-size:0.82rem;color:var(--muted)">Loading Sondr Fundamentals…</p></div>
+    </div>
+
+    <!-- ───────── TRAINING VIDEOS (ongoing/recurring from owner) ───────── -->
+    <div class="page" id="page-training">
+      <div class="card">
+        <div class="card-title">Ongoing Development</div>
+        <p style="font-size:0.78rem;color:var(--muted);margin-bottom:1rem;line-height:1.6">Ongoing training videos and reading materials. For your structured onboarding, see <a onclick="goPage('induction')" style="color:var(--blush);cursor:pointer;text-decoration:underline">Sondr Fundamentals</a>.</p>
+        <div id="training-list"><p style="font-size:0.82rem;color:var(--muted)">Loading…</p></div>
+      </div>
+
+      <div class="card" style="margin-top:1.2rem">
+        <div class="card-title">My Assignments <span class="badge badge-gold">Submit to Management</span></div>
+        <p style="font-size:0.78rem;color:var(--muted);margin-bottom:1rem;line-height:1.6">Upload assignment videos or documents. Immediately visible to the owner and admin.</p>
+        <div id="my-assignments-list"><p style="font-size:0.82rem;color:var(--muted)">Loading…</p></div>
+        <div style="border-top:1px solid rgba(201,165,154,0.12);padding-top:1rem;margin-top:1rem">
+          <p style="font-size:0.65rem;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:var(--muted);margin-bottom:0.9rem">Upload New Assignment</p>
+          <div class="alert alert-ok" id="ia-ok">Assignment uploaded — management has been notified!</div>
+          <div class="alert alert-err" id="ia-err"></div>
+          <form id="instructor-assign-form">
+            <div class="field-row"><label>Title</label><input type="text" name="title" required placeholder="e.g. Week 3 Practice Submission"/></div>
+            <div class="field-row">
+              <label>Type</label>
+              <select name="type" id="ia-type" onchange="document.getElementById('ia-file').accept=this.value==='video'?'video/*':'.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx'">
+                <option value="video">Video</option>
+                <option value="document">Document (PDF, Word, Slides)</option>
+              </select>
+            </div>
+            <div class="field-row"><label>Description <span style="font-style:italic;font-size:0.7em">(optional)</span></label><textarea name="description" placeholder="Context or notes for management…"></textarea></div>
+            <div class="field-row"><label>File</label><input type="file" name="file" id="ia-file" accept="video/*" required/></div>
+            <div class="upload-progress" id="ia-progress"><div class="upload-bar"><div class="upload-fill" id="ia-fill"></div></div><p class="upload-label" id="ia-label"></p></div>
+            <button type="submit" class="btn-ink" id="ia-btn">Upload Assignment</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───────── MY VIDEOS UPLOAD ───────── -->
+    <div class="page" id="page-myvideos">
+      <div class="alert alert-ok" id="vid-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Video uploaded successfully!</div>
+      <div class="alert alert-err" id="vid-err"></div>
+      <div class="card">
+        <div class="card-title">Upload a Video</div>
+        <form id="video-form">
+          <div class="field-row"><label>Video Title</label><input type="text" name="title" placeholder="e.g. Footwork variation — Intermediate" required/></div>
+          <div class="field-row">
+            <label>Category</label>
+            <select name="category" required>
+              <option value="">Select category…</option>
+              <option value="technique">Technique</option>
+              <option value="choreography">Choreography / Sequencing</option>
+              <option value="personal">Personal Development</option>
+              <option value="training">Training Material</option>
+              <option value="assessment">Assessment Submission (Week 5)</option>
+            </select>
+          </div>
+          <div class="field-row"><label>Description <span style="font-style:italic;font-size:0.7em">(optional)</span></label><textarea name="description" placeholder="Context, what it covers, who it's for…"></textarea></div>
+          <div class="field-row"><label>Select Video File <span style="font-style:italic;font-size:0.7em">(max 500MB)</span></label><input type="file" name="file" accept="video/*" id="vid-file" required/><p class="field-note">Supported: MP4, MOV, AVI, MKV, WebM</p></div>
+          <div class="upload-progress" id="up-progress"><div class="upload-bar"><div class="upload-fill" id="up-fill"></div></div><p class="upload-label" id="up-label"></p></div>
+          <button type="submit" class="btn-ink" id="vid-btn">Upload Video</button>
+        </form>
+      </div>
+      <div class="card" style="margin-top:1.2rem">
+        <div class="card-title">My Uploaded Videos</div>
+        <div id="my-vids-list"><p style="font-size:0.82rem;color:var(--muted)">Loading…</p></div>
+      </div>
+    </div>
+
+    <!-- ───────── NOTES ───────── -->
+    <div class="page" id="page-notes">
+      <div class="alert alert-ok" id="note-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Note saved.</div>
+      <div class="card">
+        <div class="card-title">New Note</div>
+        <form id="note-form">
+          <div class="field-row"><label>Title</label><input type="text" name="title" placeholder="Class ideas, client notes, training observations…" required/></div>
+          <div class="field-row"><label>Content</label><textarea name="content" style="min-height:140px" placeholder="Write your note here…" required></textarea></div>
+          <button type="submit" class="btn-ink">Save Note</button>
+        </form>
+      </div>
+      <div class="card">
+        <div class="card-title">My Notes</div>
+        <div id="notes-list"><p style="font-size:0.82rem;color:var(--muted)">Loading…</p></div>
+      </div>
+    </div>
+
+    <!-- ───────── MESSAGES (Feedback & Broadcasts inbox) ───────── -->
+    <div class="page" id="page-messages">
+      <div class="card" style="border-left:3px solid #64333C;display:flex;flex-direction:column;padding-bottom:0">
+        <div class="card-title" style="margin-bottom:0.4rem">Feedback from Management <span class="badge badge-gold" id="msg-fb-count"></span></div>
+        <div id="msg-feedback-list" style="flex:1;overflow-y:auto;max-height:52vh;padding:0.8rem 0;min-height:80px"><p style="font-size:0.82rem;color:var(--muted)">Loading…</p></div>
+        <!-- Reply bar -->
+        <div style="display:flex;gap:0.5rem;padding:0.8rem 0 1rem;border-top:1px solid rgba(201,165,154,0.15);margin-top:0.5rem;align-items:flex-end">
+          <textarea id="msg-reply-input" rows="2" placeholder="Write a reply…" style="flex:1;resize:none;padding:0.6rem 0.8rem;border:1px solid rgba(201,165,154,0.3);background:var(--parch);font-family:var(--fb);font-size:0.86rem;color:var(--ink);outline:none;border-radius:8px;line-height:1.5" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendInstructorReply();}"></textarea>
+          <button id="msg-reply-btn" onclick="sendInstructorReply()" class="btn-ink" style="padding:0.55rem 1rem;flex-shrink:0;align-self:flex-end;border-radius:8px">Send</button>
+        </div>
+      </div>
+      <div class="card" style="border-left:3px solid var(--ink)">
+        <div class="card-title">Announcements &amp; Broadcasts <span class="badge badge-blush" id="msg-bc-count"></span></div>
+        <p style="font-size:0.82rem;color:var(--muted);line-height:1.7;margin-bottom:1.2rem">Studio-wide messages and announcements from management.</p>
+        <div id="msg-broadcast-list"><p style="font-size:0.82rem;color:var(--muted)">Loading…</p></div>
+      </div>
+    </div>
+
+    <!-- ───────── HISTORY ───────── -->
+    <div class="page" id="page-history">
+      <div class="card" style="padding:0">
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Date</th><th>Score</th><th>Classes</th><th>On Time</th><th>Props</th><th>Mods</th><th>Names</th><th>Close</th></tr></thead>
+            <tbody id="hist-body"><tr><td colspan="8" style="padding:1.5rem;text-align:center;color:var(--muted)">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───────── SETTINGS ───────── -->
+    <div class="page" id="page-settings">
+      <div class="card" style="max-width:480px">
+        <div class="card-title">Change Password</div>
+        <div class="alert alert-ok" id="pw-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Password updated successfully.</div>
+        <div class="alert alert-err" id="pw-err"></div>
+        <form id="pw-form">
+          <div class="field-row"><label>New Password</label>
+            <input type="password" id="npw" placeholder="Min. 8 characters" required autocomplete="new-password" oninput="pwStrength(this.value)"/>
+            <div class="pw-strength"><div class="pw-strength-fill" id="pw-sfill"></div></div>
+            <p style="font-size:0.65rem;margin-top:0.25rem" id="pw-slbl"></p>
+          </div>
+          <div class="field-row"><label>Confirm Password</label><input type="password" id="cpw" placeholder="Repeat new password" required autocomplete="new-password"/></div>
+          <button type="submit" class="btn-ink" id="pw-btn">Update Password</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ───────── WEEKLY CHECK-IN ───────── -->
+    <div class="page" id="page-weekly">
+      <div class="section-identity" style="border-left:4px solid var(--blush);background:rgba(201,165,154,0.07);padding:0.8rem 1.2rem;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem">
+        <div>
+          <p style="font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--blush);font-weight:500">Weekly · End of Week</p>
+          <p style="font-family:var(--fd);font-size:1.1rem;color:var(--ink)">Weekly Check-In — submitted every Friday</p>
+        </div>
+        <span class="badge badge-blush">Due every Friday</span>
+      </div>
+      <div class="alert alert-ok" id="wci-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Weekly check-in submitted!</div>
+      <div class="alert alert-err" id="wci-err"></div>
+      <div class="card" style="border-left:3px solid var(--blush)">
+        <div class="card-title">Weekly Check-In <span class="badge badge-blush">All questions · Friday</span></div>
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1.4rem;line-height:1.75">Complete all sections by end of day Friday. Goes directly to Gagan.</p>
+        <form id="wci-form">
+          <div class="field-row"><label>Week ending</label><input type="date" name="week_ending" id="wci-date" required/></div>
+          <p class="section-head">Teaching This Week</p>
+          <div class="field-row"><label>Classes Observed — Instructor + class observed</label><textarea name="classes_observed" style="min-height:90px" placeholder="e.g. Observed Clare's Essential Reformer — Tuesday 9am…" required></textarea></div>
+          <div class="field-row"><label>Personal Practice &amp; Preparation</label><textarea name="personal_practice" style="min-height:90px" placeholder="e.g. Worked on spring tension cues for Tower series…" required></textarea></div>
+          <p class="section-head">Reflection</p>
+          <div class="field-row"><label>One thing that went well this week</label><textarea name="reflection_well" style="min-height:70px" placeholder="Be specific. What worked, why, and how did clients respond?" required></textarea></div>
+          <div class="field-row"><label>One area you are actively working to improve</label><textarea name="reflection_improve" style="min-height:70px" placeholder="Be honest and specific. What will you do differently?" required></textarea></div>
+          <p class="section-head">Clients &amp; Support</p>
+          <div class="field-row"><label>Client Feedback / Issues <span style="font-size:0.7em;font-style:italic;text-transform:none;letter-spacing:0">(If none, write "None")</span></label><textarea name="client_feedback" style="min-height:70px" placeholder="Any feedback, complaints, injuries, or situations to flag…" required></textarea></div>
+          <div class="field-row"><label>Training &amp; Development <span style="font-size:0.7em;font-style:italic;text-transform:none;letter-spacing:0">(optional)</span></label><textarea name="training_dev" style="min-height:70px" placeholder="Any workshops, trainings, or self-study completed this week…"></textarea></div>
+          <div class="field-row"><label>Support Needed <span style="font-size:0.7em;font-style:italic;text-transform:none;letter-spacing:0">(optional)</span></label><textarea name="support_needed" style="min-height:70px" placeholder="Any support or clarity required from management…"></textarea></div>
+          <button type="submit" class="btn-ink" id="wci-btn">Submit Weekly Check-In</button>
+        </form>
+      </div>
+      <div class="card"><div class="card-title">Past Check-Ins</div><div id="wci-list"><p style="font-size:0.82rem;color:var(--muted)">Loading…</p></div></div>
+    </div>
+
+    <!-- ───────── WEEKLY REPORT ───────── -->
+    <div class="page" id="page-weeklyreport">
+      <div class="section-identity" style="border-left:4px solid var(--ink);background:rgba(26,22,20,0.03);padding:0.8rem 1.2rem;margin-bottom:1.2rem">
+        <p style="font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);font-weight:500">Weekly · Detailed Report</p>
+        <p style="font-family:var(--fd);font-size:1.1rem;color:var(--ink)">Weekly Report — full structured reflection</p>
+      </div>
+      <div class="alert alert-ok" id="wr-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Weekly report submitted!</div>
+      <div class="alert alert-err" id="wr-err"></div>
+      <div class="card" style="border-left:3px solid rgba(26,22,20,0.3)">
+        <div class="card-title">Weekly Report <span class="badge badge-blush">Due every Friday</span></div>
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1.4rem;line-height:1.75">Complete all sections honestly. This goes directly to Gagan.</p>
+        <form id="weekly-form">
+          <div class="field-row"><label>Week ending</label><input type="date" name="week_ending" id="wr-date" required/></div>
+          <div class="field-row"><label>1. Classes Observed — Instructor + class observed</label><textarea name="classes_observed" style="min-height:90px" placeholder="e.g. Observed Clare's Essential Reformer — Tuesday 9am. Noted her transitions between footwork and hundred…" required></textarea></div>
+          <div class="field-row"><label>2. Personal Practice & Preparation — What you practiced or prepared this week</label><textarea name="personal_practice" style="min-height:90px" placeholder="e.g. Worked on spring tension cues for Tower series, built a new playlist for Reformer Flow…" required></textarea></div>
+          <div class="field-row"><label>3a. Teaching Reflection — One thing that went well</label><textarea name="reflection_well" style="min-height:70px" placeholder="Be specific. What worked, why, and how did clients respond?" required></textarea></div>
+          <div class="field-row"><label>3b. Teaching Reflection — One area you are actively working to improve</label><textarea name="reflection_improve" style="min-height:70px" placeholder="Be honest and specific. What will you do differently?" required></textarea></div>
+          <div class="field-row"><label>4. Client Feedback / Issues <span style="font-size:0.7em;font-style:italic;text-transform:none;letter-spacing:0">(If none, write "None")</span></label><textarea name="client_feedback" style="min-height:70px" placeholder="Any client feedback, complaints, injuries, or situations to flag…" required></textarea></div>
+          <div class="field-row"><label>5. Training & Development <span style="font-size:0.7em;font-style:italic;text-transform:none;letter-spacing:0">(optional)</span></label><textarea name="training_dev" style="min-height:70px" placeholder="Any workshops, trainings, or self-study completed this week…"></textarea></div>
+          <div class="field-row"><label>6. Support Needed <span style="font-size:0.7em;font-style:italic;text-transform:none;letter-spacing:0">(optional)</span></label><textarea name="support_needed" style="min-height:70px" placeholder="Any support or clarity required from the lead instructor or management…"></textarea></div>
+          <button type="submit" class="btn-ink" id="wr-btn">Submit Weekly Report</button>
+        </form>
+      </div>
+      <div class="card"><div class="card-title">Past Reports</div><div id="wr-list"><p style="font-size:0.82rem;color:var(--muted)">Loading…</p></div></div>
+    </div>
+
+    <!-- ───────── OBSERVATION LOG (with Community Presence section) ───────── -->
+    <div class="page" id="page-obslog">
+      <!-- Section identity bar -->
+      <div class="section-identity" style="border-left:4px solid var(--muted);background:rgba(122,106,100,0.05);padding:0.8rem 1.2rem;margin-bottom:1.2rem">
+        <p style="font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);font-weight:500">Weekly · Peer Observation</p>
+        <p style="font-family:var(--fd);font-size:1.1rem;color:var(--ink)">Observation Log — minimum 6 per week</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--muted-l)">
+        <div class="card-title">Observation Log <span class="badge badge-blush">Min. 6 per week</span></div>
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1.4rem;line-height:1.75">Complete for every class you observe.</p>
+        <div class="alert alert-ok" id="ol-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Observation log saved!</div>
+        <div class="alert alert-err" id="ol-err"></div>
+        <form id="obslog-form">
+          <p class="section-head">The Class</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div class="field-row"><label>Class Date & Time</label><input type="datetime-local" name="obs_datetime" required/></div>
+            <div class="field-row"><label>Class Type / Level</label>
+              <select name="class_type" required>
+                <option value="">Select class type…</option>
+                <option value="Sondr Intro">Sondr Intro</option>
+                <option value="Sondr Essential">Sondr Essential</option>
+                <option value="Sondr Tower">Sondr Tower</option>
+                <option value="Sondr Jumpboard">Sondr Jumpboard</option>
+                <option value="Sondr Super Sculpt">Sondr Super Sculpt</option>
+                <option value="Sondr Strength">Sondr Strength</option>
+                <option value="Sondr Mat Pilates">Sondr Mat Pilates</option>
+                <option value="Sondr Mobility">Sondr Mobility</option>
+                <option value="Sondr Prenatal">Sondr Prenatal</option>
+                <option value="Sondr Chair">Sondr Chair</option>
+                <option value="Private Session">Private Session</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-row"><label>Instructor Observed</label><select name="obs_instructor" id="obs-instructor-select" required><option value="">Select instructor…</option></select></div>
+
+          <p class="section-head">Teaching Craft</p>
+          <div class="field-row">
+            <label>1. Flow & Sequencing</label>
+            <p class="section-hint">How did the instructor transition between exercises? Examples of smooth sequencing?</p>
+            <textarea name="flow_sequencing" style="min-height:80px" placeholder="Describe transitions, flow, any notable sequences…" required></textarea>
+          </div>
+          <div class="field-row">
+            <label>2. Layering & 360 Movement</label>
+            <p class="section-hint">How were exercises layered for challenge? Did the class cover all planes of movement?</p>
+            <textarea name="layering" style="min-height:80px" placeholder="Describe layering approach and movement planes covered…" required></textarea>
+          </div>
+          <div class="field-row">
+            <label>3. Cueing & Voice</label>
+            <p class="section-hint">What cues were effective? How did the instructor use tone, clarity, and encouragement?</p>
+            <textarea name="cueing_voice" style="min-height:80px" placeholder="Specific cues that worked, tone observations, clarity…" required></textarea>
+          </div>
+          <div class="field-row">
+            <label>4. Modifications</label>
+            <p class="section-hint">Which modifications were offered? How were beginners/advanced clients managed?</p>
+            <textarea name="modifications" style="min-height:80px" placeholder="Regressions/progressions offered, how different levels were handled…" required></textarea>
+          </div>
+
+          <p class="section-head">Community Presence</p>
+          <p class="section-hint" style="margin-top:-0.2rem">How the instructor builds connection — with individuals and with the room as a whole.</p>
+          <div class="field-row">
+            <label>5a. Welcome & Atmosphere</label>
+            <p class="section-hint">How did the instructor greet clients? What was the energy of the room before the class began?</p>
+            <textarea name="community_welcome" style="min-height:70px" placeholder="Greeting style, eye contact, atmosphere created on arrival…" required></textarea>
+          </div>
+          <div class="field-row">
+            <label>5b. Use of Names & Personal Connection</label>
+            <p class="section-hint">Did they use client names? How did they personalise cues or attention?</p>
+            <textarea name="community_names" style="min-height:70px" placeholder="Use of names, individual check-ins, personalised cues…" required></textarea>
+          </div>
+          <div class="field-row">
+            <label>5c. Group Energy & Belonging</label>
+            <p class="section-hint">How did the instructor cultivate a sense of community in the room? Memorable interactions?</p>
+            <textarea name="community_energy" style="min-height:70px" placeholder="Moments of group connection, humour, shared challenge, how clients responded to each other…" required></textarea>
+          </div>
+          <div class="field-row">
+            <label>5d. Closing & Hand-off</label>
+            <p class="section-hint">How did the instructor close the class and send clients out into their day?</p>
+            <textarea name="community_closing" style="min-height:70px" placeholder="Closing words, farewells, follow-up offers, post-class atmosphere…" required></textarea>
+          </div>
+
+          <p class="section-head">Feedback for Instructor</p>
+          <div class="field-row">
+            <label>Feedback for the Instructor I Observed</label>
+            <textarea name="takeaways" style="min-height:90px" placeholder="Constructive feedback you would share with the instructor you observed…" required></textarea>
+          </div>
+
+          <button type="submit" class="btn-ink" id="ol-btn">Save Observation Log</button>
+        </form>
+      </div>
+      <div class="card"><div class="card-title">My Observation Logs</div><div id="ol-list"><p style="font-size:0.82rem;color:var(--muted)">Loading…</p></div></div>
+      <div class="card" id="obs-feedback-section" style="display:none">
+        <div class="card-title">Feedback from Gagan <span class="badge badge-gold" id="obs-fb-count"></span></div>
+        <div id="obs-feedback-list"><p style="font-size:0.82rem;color:var(--muted)">Loading…</p></div>
+      </div>
+    </div>
+
+    <!-- ───────── CLASS ATTENDANCE ───────── -->
+    <div class="page" id="page-classlog">
+      <div class="alert alert-ok" id="cl-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Class logged.</div>
+      <div class="alert alert-err" id="cl-err"></div>
+      <div class="card">
+        <div class="card-title">Log a Class</div>
+        <p style="font-size:0.78rem;color:var(--muted);margin-bottom:1rem;line-height:1.6">Record attendance after each class so we can see studio trends.</p>
+        <form id="cl-form">
+          <div class="field-row"><label>Class name</label><input type="text" name="class_name" placeholder="e.g. Reformer Flow 7am" required/></div>
+          <div class="field-row" style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem">
+            <div><label>Date</label><input type="date" name="class_date" required/></div>
+            <div><label>Time</label><input type="time" name="class_time"/></div>
+          </div>
+          <div class="field-row" style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem">
+            <div><label>Attendees</label><input type="number" name="attendees" min="0" required/></div>
+            <div><label>Capacity</label><input type="number" name="capacity" min="0"/></div>
+          </div>
+          <div class="field-row"><label>Notes <span style="font-style:italic;font-size:0.7em">(optional)</span></label><textarea name="notes" placeholder="Anything notable about this class…"></textarea></div>
+          <button type="submit" class="btn-ink" id="cl-btn">Save Class</button>
+        </form>
+      </div>
+      <div class="card"><div class="card-title">Recent Classes</div><div id="cl-list"><p style="font-size:0.82rem;color:var(--muted)">Loading…</p></div></div>
+    </div>
+
+  </div>
+</main>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const SUPABASE_URL      = 'https://jzjftfdexvymdrdokjjo.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6amZ0ZmRleHZ5bWRyZG9rampvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0MDg0MDgsImV4cCI6MjA5MTk4NDQwOH0.leOf1JeH0EX9TRlXT0ihCRUKoXuZW-b_CQrRX0cvefM';
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth:{ persistSession:true, autoRefreshToken:true } });
+
+// ── FAST UPLOAD (TUS resumable for large files) ──────────────────
+async function fastUpload(bucket, path, file, onProgress){
+  if (file.size <= 6*1024*1024){
+    const { error } = await sb.storage.from(bucket).upload(path, file, {
+      upsert:false, contentType:file.type||'application/octet-stream', cacheControl:'3600'
+    });
+    if (error) throw error;
+    onProgress?.(100);
+    return;
+  }
+  const tusMod = await import('https://cdn.jsdelivr.net/npm/tus-js-client@4.1.0/+esm');
+  const Upload = tusMod.Upload || tusMod.default?.Upload || tusMod.default;
+  const { data:{ session } } = await sb.auth.getSession();
+  if (!session) throw new Error('Not signed in.');
+  await new Promise((resolve, reject) => {
+    const upload = new Upload(file, {
+      endpoint: `${SUPABASE_URL}/storage/v1/upload/resumable`,
+      retryDelays: [0, 3000, 6000, 12000, 24000],
+      headers: { authorization: `Bearer ${session.access_token}`, 'x-upsert':'false' },
+      uploadDataDuringCreation: true,
+      removeFingerprintOnSuccess: true,
+      metadata: { bucketName:bucket, objectName:path, contentType:file.type||'application/octet-stream', cacheControl:'3600' },
+      chunkSize: 6*1024*1024,
+      onError: err => reject(err),
+      onProgress: (sent, total) => onProgress?.(Math.round(sent/total*100)),
+      onSuccess: () => resolve(),
+    });
+    upload.start();
+  });
+}
+
+let ME=null, PROFILE=null;
+let TRAINING_VIDEOS=[], INDUCTION_WEEKS=[], MY_COMPLETIONS=new Set(), MY_ASSESSMENT=null;
+let _spSlotCount = 0;
+
+// ── SILENT TIME TRACKER ───────────────────────────────────────────
+let _activeLog = null;
+
+async function ttStart(taskType) {
+  await ttAbandon();
+  try {
+    const { data } = await sb.from('task_time_logs')
+      .insert({ user_id: ME.id, task_type: taskType })
+      .select('id').single();
+    if (data) _activeLog = { id: data.id, task: taskType, t: Date.now() };
+  } catch(e) { /* silent */ }
+}
+
+async function ttComplete() {
+  if (!_activeLog) return;
+  const secs = Math.round((Date.now() - _activeLog.t) / 1000);
+  try {
+    await sb.from('task_time_logs')
+      .update({ completed_at: new Date().toISOString(), duration_seconds: secs, completed: true })
+      .eq('id', _activeLog.id);
+  } catch(e) { /* silent */ }
+  _activeLog = null;
+}
+
+async function ttAbandon() {
+  if (!_activeLog) return;
+  const secs = Math.round((Date.now() - _activeLog.t) / 1000);
+  try {
+    await sb.from('task_time_logs')
+      .update({ completed_at: new Date().toISOString(), duration_seconds: secs, completed: false })
+      .eq('id', _activeLog.id);
+  } catch(e) { /* silent */ }
+  _activeLog = null;
+}
+const PAGE_TITLES = {
+  home:'Dashboard', checkin:'Daily Check-In', practice:'Self-Practice Log',
+  induction:'Sondr Fundamentals', reading:'Reading Material', training:'Ongoing Development',
+  myvideos:'Upload Video', notes:'My Notes', weekly:'Weekly Check-In',
+  weeklyreport:'Weekly Report',
+  obslog:'Observation Log', classlog:'Class Attendance',
+  history:'Check-In History', settings:'Settings', messages:'Messages'
+};
+
+const RING_C = 2 * Math.PI * 42; // circumference for r=42 in glance rings
+
+// ── AUTH ──────────────────────────────────────────────────────────
+async function init() {
+  const { data:{ session } } = await sb.auth.getSession();
+  if (!session) { window.location.href='/staff/login.html'; return; }
+  ME = session.user;
+  const { data:p } = await sb.from('profiles').select('*').eq('id', ME.id).single();
+  if (!p) { await sb.auth.signOut(); window.location.href='/staff/login.html'; return; }
+  if (p.role === 'owner') { window.location.href='/staff/owner.html'; return; }
+  if (p.is_active === false) { await sb.auth.signOut(); window.location.href='/staff/login.html'; return; }
+  PROFILE = p;
+  const firstName = (p.full_name||'?').split(' ')[0];
+  document.getElementById('sb-name').textContent = p.full_name || ME.email;
+  document.getElementById('sb-role').textContent = p.specialty || 'Instructor';
+  document.getElementById('sb-avatar').textContent = (firstName[0]||'?').toUpperCase();
+  document.getElementById('today-badge').textContent = new Date().toLocaleDateString('en-KE',{weekday:'long',day:'numeric',month:'long'});
+
+  // Load editable Sondr Fundamentals title (owner/admin only edit)
+  await loadSectionTitle();
+
+  document.getElementById('sp-date') && (document.getElementById('sp-date').valueAsDate = new Date());
+  document.getElementById('wr-date').valueAsDate = new Date();
+  document.getElementById('wci-date') && (document.getElementById('wci-date').valueAsDate = new Date());
+  const cd = document.querySelector('#cl-form input[name="class_date"]'); if (cd) cd.valueAsDate = new Date();
+
+  // Wrap each loader so a single failure (e.g. missing table) doesn't break the whole page.
+  const safe = (fn, label) => Promise.resolve().then(fn).catch(err => console.warn('[init] '+label+' failed:', err?.message||err));
+  await Promise.all([
+    safe(loadGlance,'glance'), safe(loadNotifications,'notifications'), safe(loadTrainingVideos,'trainingVideos'), safe(loadMyAssignments,'myAssignments'),
+    safe(loadMyVideos,'myVideos'), safe(loadSPClips,'spClips'), safe(loadNotes,'notes'), safe(loadHistory,'history'), safe(loadWeeklyReports,'weeklyReports'),
+    safe(loadWeeklyCheckins,'weeklyCheckins'), safe(loadObservationLogs,'obsLogs'), safe(loadClassLog,'classLog'),
+    safe(()=> (typeof loadSelfPractice==='function'?loadSelfPractice():Promise.resolve()),'selfPractice'),
+    safe(loadInduction,'induction'), safe(loadInstructorList,'instructorList'), safe(loadFeedback,'feedback'),
+    safe(checkDailyTaskCap,'taskCap'), safe(loadMessages,'messages')
+  ]);
+  startNotifRealtime();
+  sb.channel('instructor_feedback_live_refresh')
+    .on('postgres_changes', { event:'*', schema:'public', table:'instructor_feedback', filter:`instructor_id=eq.${ME.id}` }, async () => { await loadFeedback(); await loadMessages(); await loadNotifications(); })
+    .on('postgres_changes', { event:'*', schema:'public', table:'notifications', filter:`recipient_id=eq.${ME.id}` }, async () => { await loadNotifications(); })
+    .subscribe();
+
+  // Listen for owner deletes — no column filter so DELETE events fire reliably
+  // (filtered DELETE events require REPLICA IDENTITY FULL; unfiltered works without it)
+  sb.channel('instructor_owned_data_changes')
+    .on('postgres_changes', { event:'DELETE', schema:'public', table:'notes' }, async () => {
+      if (typeof loadAll === 'function') await loadAll();
+    })
+    .on('postgres_changes', { event:'DELETE', schema:'public', table:'self_practice_logs' }, async () => {
+      if (typeof loadSelfPractice === 'function') await loadSelfPractice();
+      if (typeof loadGlance === 'function') await loadGlance();
+    })
+    .on('postgres_changes', { event:'DELETE', schema:'public', table:'daily_checkins' }, async () => {
+      if (typeof loadAll === 'function') await loadAll();
+      if (typeof loadGlance === 'function') await loadGlance();
+    })
+    .on('postgres_changes', { event:'DELETE', schema:'public', table:'instructor_feedback' }, async () => {
+      if (typeof loadMessages === 'function') await loadMessages();
+    })
+    .subscribe();
+}
+
+// ── INSTRUCTOR LIST (for observation-log dropdown) ────────────────
+// ── EDITABLE SONDR FUNDAMENTALS TITLE (owner/admin only) ─────────
+async function loadSectionTitle(){
+  const titleEl = document.getElementById('induction-section-title');
+  if (!titleEl) return;
+  // Try to load from app_config table; fall back to default
+  let title = 'Sondr Fundamentals';
+  try {
+    const { data } = await sb.from('app_config').select('value').eq('key','fundamentals_title').maybeSingle();
+    if (data?.value) title = data.value;
+  } catch(e) { /* use default */ }
+  titleEl.textContent = title;
+  // Show edit button only for owner/admin roles
+  if (PROFILE?.role === 'owner' || PROFILE?.role === 'admin') {
+    const editBtn = document.createElement('button');
+    editBtn.className = 'title-edit-btn';
+    editBtn.textContent = 'Edit';
+    editBtn.style.display = 'inline-block';
+    titleEl.after(editBtn);
+    editBtn.addEventListener('click', () => {
+      const currentTitle = titleEl.textContent;
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.value = currentTitle;
+      input.className = 'title-edit-input';
+      const saveBtn = document.createElement('button');
+      saveBtn.className = 'title-edit-btn';
+      saveBtn.textContent = 'Save';
+      saveBtn.style.display = 'inline-block';
+      const cancelBtn = document.createElement('button');
+      cancelBtn.className = 'title-edit-btn';
+      cancelBtn.textContent = 'Cancel';
+      cancelBtn.style.display = 'inline-block';
+      titleEl.style.display = 'none';
+      editBtn.style.display = 'none';
+      titleEl.after(cancelBtn);
+      titleEl.after(saveBtn);
+      titleEl.after(input);
+      cancelBtn.addEventListener('click', () => {
+        input.remove(); saveBtn.remove(); cancelBtn.remove();
+        titleEl.style.display = ''; editBtn.style.display = 'inline-block';
+      });
+      saveBtn.addEventListener('click', async () => {
+        const newTitle = input.value.trim() || 'Sondr Fundamentals';
+        try {
+          await sb.from('app_config').upsert({ key:'fundamentals_title', value:newTitle }, { onConflict:'key' });
+          titleEl.textContent = newTitle;
+        } catch(e) { titleEl.textContent = newTitle; }
+        input.remove(); saveBtn.remove(); cancelBtn.remove();
+        titleEl.style.display = ''; editBtn.style.display = 'inline-block';
+      });
+    });
+  }
+}
+
+// ── NOTIFY OWNER + ADMIN ──────────────────────────────────────────
+// Sends a notification to every owner and admin so they see instructor activity immediately
+async function notifyStaff(type, title, message, resourceType, link) {
+  try {
+    const { data: staff } = await sb.from('profiles')
+      .select('id').in('role',['owner','admin']).eq('is_active',true);
+    if (!staff?.length) return;
+    const notifications = staff.map(s => ({
+      recipient_id: s.id,
+      sender_id: ME.id,
+      type,
+      title,
+      message: message.length > 160 ? message.slice(0,160)+'…' : message,
+      link: link || '/staff/owner.html',
+      resource_type: resourceType,
+      is_read: false,
+    }));
+    await sb.from('notifications').insert(notifications);
+  } catch(e){ console.warn('[notifyStaff]', e?.message||e); }
+}
+
+async function loadInstructorList(){
+  const { data } = await sb.from('profiles').select('id,full_name').in('role',['instructor','admin','operations']).eq('is_active',true).order('full_name');
+  const sel = document.getElementById('obs-instructor-select');
+  if (!sel) return;
+  (data||[]).forEach(p=>{
+    const o=document.createElement('option'); o.value=p.full_name; o.textContent=p.full_name; sel.appendChild(o);
+  });
+}
+
+// ── FEEDBACK FROM GAGAN ───────────────────────────────────────────
+async function loadFeedback(){
+  const { data } = await sb.from('instructor_feedback').select('*').eq('instructor_id',ME.id).order('created_at',{ascending:false});
+  if (!data?.length) return;
+  document.getElementById('feedback-home').style.display='block';
+  document.getElementById('fb-count').textContent = data.length;
+  document.getElementById('feedback-list').innerHTML = data.map(f=>`
+    <div style="padding:0.9rem 0;border-bottom:1px solid rgba(201,165,154,0.12)">
+      <p style="font-size:0.82rem;color:var(--muted);margin-top:0.4rem;line-height:1.7;white-space:pre-wrap">${f.message||''}</p>
+      <p style="font-size:0.68rem;color:var(--muted-l);margin-top:0.4rem">${new Date(f.created_at).toLocaleDateString('en-KE',{day:'numeric',month:'long',year:'numeric'})}</p>
+    </div>`).join('');
+}
+
+// ── MESSAGES PAGE (Feedback thread + Broadcasts) ─────────────────
+async function loadMessages(){
+  const fmtDate = ts => new Date(ts).toLocaleDateString('en-KE',{day:'numeric',month:'short',year:'numeric'}) + ' ' + new Date(ts).toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'});
+
+  // ── Feedback thread (all messages between instructor & management, ordered oldest first) ──
+  const { data: fbData } = await sb.from('instructor_feedback')
+    .select('*').eq('instructor_id', ME.id).order('created_at',{ascending:true});
+  const fbList = document.getElementById('msg-feedback-list');
+  const fbCount = document.getElementById('msg-fb-count');
+  if (fbCount) fbCount.textContent = (fbData||[]).filter(f=>f.author_id!==ME.id).length;
+  if (fbData?.length) {
+    fbList.innerHTML = fbData.map(f=>{
+      const isMe = f.author_id === ME.id;
+      const msgSafe = (f.message||'').replace(/'/g,"\\'").replace(/\n/g,'\\n');
+      const preview = (f.message||'').substring(0,200);
+      const isTruncated = (f.message||'').length > 200;
+      if (isMe) {
+        // Instructor reply — right-aligned bubble
+        return `<div style="display:flex;justify-content:flex-end;margin-bottom:0.65rem;gap:0.5rem;align-items:flex-end">
+          <div style="max-width:78%">
+            <div style="background:#64333C;color:#fff;border-radius:14px 14px 4px 14px;padding:0.75rem 1rem;cursor:pointer" onclick="showFbModal('${msgSafe}','You','${f.created_at}',null)">
+              <p style="font-size:0.86rem;line-height:1.7;margin:0;white-space:pre-wrap">${preview}${isTruncated?'…':''}</p>
+              ${isTruncated?'<p style="font-size:0.68rem;color:rgba(255,255,255,0.7);margin-top:0.3rem">Tap to read full →</p>':''}
+            </div>
+            <p style="font-size:0.6rem;color:var(--muted-l);text-align:right;margin-top:0.2rem">${fmtDate(f.created_at)}</p>
+          </div>
+        </div>`;
+      } else {
+        // Management message — left-aligned bubble
+        return `<div style="display:flex;justify-content:flex-start;margin-bottom:0.65rem;gap:0.5rem;align-items:flex-end">
+          <div style="max-width:78%">
+            <p style="font-size:0.6rem;color:var(--muted-l);margin-bottom:0.2rem;letter-spacing:0.06em">Sondr Management</p>
+            <div style="background:rgba(201,165,154,0.14);border:1px solid rgba(201,165,154,0.28);border-radius:14px 14px 14px 4px;padding:0.75rem 1rem;cursor:pointer" onclick="showFbModal('${msgSafe}','Sondr Management','${f.created_at}',null)">
+              <p style="font-size:0.86rem;color:var(--ink);line-height:1.7;margin:0;white-space:pre-wrap">${preview}${isTruncated?'…':''}</p>
+              ${isTruncated?'<p style="font-size:0.68rem;color:var(--blush);margin-top:0.3rem">Tap to read full →</p>':''}
+            </div>
+            <p style="font-size:0.6rem;color:var(--muted-l);margin-top:0.2rem">${fmtDate(f.created_at)}</p>
+          </div>
+        </div>`;
+      }
+    }).join('');
+    // Scroll to bottom of thread
+    setTimeout(()=>{ if(fbList) fbList.scrollTop = fbList.scrollHeight; }, 50);
+  } else {
+    fbList.innerHTML = '<p style="font-size:0.82rem;color:var(--muted);text-align:center;padding:1.5rem 0">No messages yet.</p>';
+  }
+
+  // ── Broadcasts (one-way, left-aligned only) ──
+  const { data: bcData } = await sb.from('notifications')
+    .select('*').eq('recipient_id', ME.id).eq('type','broadcast')
+    .order('created_at',{ascending:false}).limit(50);
+  const bcList = document.getElementById('msg-broadcast-list');
+  const bcCount = document.getElementById('msg-bc-count');
+  if (bcCount) bcCount.textContent = (bcData||[]).length;
+  if (bcData?.length) {
+    bcList.innerHTML = bcData.map(n=>{
+      const msgSafe = (n.message||'').replace(/'/g,"\\'").replace(/\n/g,'\\n');
+      const titleSafe = (n.title||'Announcement').replace(/'/g,"\\'");
+      const preview = (n.message||'').substring(0,200);
+      const isTruncated = (n.message||'').length > 200;
+      const isNew = !n.is_read;
+      return `<div style="display:flex;justify-content:flex-start;margin-bottom:0.8rem">
+        <div style="max-width:85%">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.2rem;flex-wrap:wrap">
+            <span style="font-size:0.68rem;font-weight:700;color:var(--blush)">${n.title||'Announcement'}</span>
+            ${isNew?'<span style="background:#64333C;color:#fff;font-size:0.5rem;padding:0.1rem 0.4rem;letter-spacing:0.1em;text-transform:uppercase;border-radius:2px">New</span>':''}
+            <span style="font-size:0.6rem;color:var(--muted-l)">${fmtDate(n.created_at)}</span>
+          </div>
+          <div style="background:rgba(201,165,154,0.1);border:1px solid rgba(201,165,154,0.25);border-radius:14px 14px 14px 4px;padding:0.75rem 1rem;cursor:pointer" onclick="showBCModal('${titleSafe}','${msgSafe}','${n.created_at}',null)">
+            <p style="font-size:0.86rem;color:var(--ink);line-height:1.75;white-space:pre-wrap;margin:0">${preview}${isTruncated?'…':''}</p>
+            ${isTruncated?'<p style="font-size:0.68rem;color:var(--blush);margin-top:0.3rem;font-weight:500">Tap to read full →</p>':''}
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  } else {
+    bcList.innerHTML = '<p style="font-size:0.82rem;color:var(--muted);text-align:center;padding:1.5rem 0">No announcements yet.</p>';
+  }
+
+  // Update nav badge
+  const unreadBc = (bcData||[]).filter(n=>!n.is_read).length;
+  const { data: unreadFbNotifs } = await sb.from('notifications')
+    .select('id').eq('recipient_id',ME.id).eq('is_read',false).eq('type','feedback');
+  const totalMsgUnread = unreadBc + (unreadFbNotifs||[]).length;
+  const nb = document.getElementById('nb-messages');
+  if (nb){ if(totalMsgUnread>0){ nb.textContent=totalMsgUnread; nb.style.display='inline-block'; } else { nb.style.display='none'; } }
+}
+
+// ── INSTRUCTOR REPLY ──────────────────────────────────────────────
+window.sendInstructorReply = async () => {
+  const ta = document.getElementById('msg-reply-input');
+  const btn = document.getElementById('msg-reply-btn');
+  const body = ta?.value?.trim();
+  if (!body) return;
+  btn.disabled=true; btn.textContent='Sending…';
+  try {
+    const { error } = await sb.from('instructor_feedback').insert({
+      instructor_id: ME.id, author_id: ME.id, message: body
+    });
+    if (error) throw error;
+    // Notify owner & admin
+    const { data: mgmt } = await sb.from('profiles').select('id').in('role',['owner','admin','operations']);
+    if (mgmt?.length) {
+      await sb.from('notifications').insert(mgmt.map(m=>({
+        recipient_id: m.id, sender_id: ME.id, type:'instructor_reply',
+        title: `Reply from ${PROFILE.full_name?.split(' ')[0]||'Instructor'}`,
+        message: body.length>140 ? body.slice(0,140)+'…' : body,
+        link:'/staff/owner.html', resource_type:'feedback'
+      })));
+    }
+    ta.value = '';
+    await loadMessages();
+  } catch(e){ alert('Could not send: '+e.message); }
+  btn.disabled=false; btn.textContent='Send';
+};
+
+// ── HOME GLANCE GRAPHS ────────────────────────────────────────────
+async function loadGlance() {
+  const since30 = new Date(); since30.setDate(since30.getDate()-30);
+  const sinceMonth = new Date(); sinceMonth.setDate(1); sinceMonth.setHours(0,0,0,0);
+  const since14 = new Date(); since14.setDate(since14.getDate()-13); since14.setHours(0,0,0,0);
+  const sinceWeek = new Date(); sinceWeek.setDate(sinceWeek.getDate()-7);
+
+  const [{ data: cis30 }, { data: cisMo }, { data: spMo }, { data: obsWk }, { data: cis14 }, { data: sp14 }] = await Promise.all([
+    sb.from('daily_checkins').select('compliance_score').eq('instructor_id',ME.id).gte('submitted_at',since30.toISOString()),
+    sb.from('daily_checkins').select('submitted_at').eq('instructor_id',ME.id).gte('submitted_at',sinceMonth.toISOString()),
+    sb.from('self_practice_logs').select('duration_minutes,practice_date').eq('instructor_id',ME.id).gte('practice_date',sinceMonth.toISOString().slice(0,10)),
+    sb.from('notes').select('id').eq('instructor_id',ME.id).ilike('title','Observation Log%').gte('created_at',sinceWeek.toISOString()),
+    sb.from('daily_checkins').select('submitted_at').eq('instructor_id',ME.id).gte('submitted_at',since14.toISOString()),
+    sb.from('self_practice_logs').select('practice_date,duration_minutes').eq('instructor_id',ME.id).gte('practice_date',since14.toISOString().slice(0,10)),
+  ]);
+
+  // 1. Compliance ring (avg of last 30 days, max 6)
+  const avg = cis30?.length ? cis30.reduce((s,c)=>s+(c.compliance_score||0),0)/cis30.length : 0;
+  const compCol = avg>=5?'#4CAF82':avg>=3?'#E8A838':avg>0?'#e04040':'#C9A59A';
+  document.getElementById('g-comp').textContent = cis30?.length ? avg.toFixed(1) : '—';
+  setRing('ring-comp', avg/6, compCol);
+
+  // 2. Check-ins ring (this month, target 22 working days)
+  const ciCount = cisMo?.length || 0;
+  document.getElementById('g-ci').textContent = ciCount;
+  setRing('ring-ci', ciCount/22, '#C9A59A');
+
+  // 3. Self-practice ring (this month, target 8 sessions)
+  const spCount = (spMo||[]).length;
+  document.getElementById('g-sp').textContent = spCount;
+  setRing('ring-sp', spCount/8, '#B8960C');
+
+  // 4. Observations ring (this week, target 6)
+  const obsCount = obsWk?.length || 0;
+  document.getElementById('g-obs').textContent = obsCount;
+  const obsCol = obsCount>=6?'#4CAF82':obsCount>=3?'#E8A838':'#7A6A64';
+  setRing('ring-obs', obsCount/6, obsCol);
+
+  // Sparklines
+  drawSparkline('spark-ci', last14Days(cis14, 'submitted_at'), '#C9A59A');
+  drawSparkline('spark-sp', last14Hours(sp14), '#B8960C');
+  document.getElementById('spark-ci-n').textContent = (cis14||[]).length;
+  document.getElementById('spark-sp-n').textContent = ((sp14||[]).reduce((s,r)=>s+(r.duration_minutes||0),0)/60).toFixed(1)+'h';
+}
+
+function setRing(id, pct, col){
+  const el = document.getElementById(id); if (!el) return;
+  const p = Math.min(Math.max(pct||0, 0), 1);
+  el.setAttribute('stroke', col);
+  setTimeout(()=>el.setAttribute('stroke-dasharray', `${(p*RING_C).toFixed(1)} ${RING_C.toFixed(1)}`), 80);
+}
+
+function last14Days(rows, field) {
+  const out = []; const today = new Date(); today.setHours(0,0,0,0);
+  for (let i=13;i>=0;i--){
+    const d = new Date(today); d.setDate(today.getDate()-i);
+    const k = d.toISOString().slice(0,10);
+    out.push({ date:k, value:(rows||[]).filter(r=>r[field] && r[field].slice(0,10)===k).length });
+  }
+  return out;
+}
+function last14Hours(rows){
+  const out = []; const today = new Date(); today.setHours(0,0,0,0);
+  for (let i=13;i>=0;i--){
+    const d = new Date(today); d.setDate(today.getDate()-i);
+    const k = d.toISOString().slice(0,10);
+    const min = (rows||[]).filter(r=>r.practice_date===k).reduce((s,r)=>s+(r.duration_minutes||0),0);
+    out.push({ date:k, value:+(min/60).toFixed(2) });
+  }
+  return out;
+}
+function drawSparkline(id, data, colour){
+  const el = document.getElementById(id); if (!el) return;
+  const W=280, H=60, pad=4;
+  const max = Math.max(...data.map(d=>d.value), 1);
+  const pts = data.map((d,i)=>{
+    return [pad + i*((W-pad*2)/Math.max(data.length-1,1)), H-pad-((d.value/max)*(H-pad*2))];
+  });
+  // Smooth Catmull-Rom curve — no pointy joins, no dots
+  function smooth(ps){
+    if(ps.length<2) return ps.map((p,i)=>`${i?'L':'M'}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
+    let d=`M${ps[0][0].toFixed(1)},${ps[0][1].toFixed(1)}`;
+    for(let i=0;i<ps.length-1;i++){
+      const p0=ps[Math.max(0,i-1)],p1=ps[i],p2=ps[i+1],p3=ps[Math.min(ps.length-1,i+2)];
+      const cp1x=(p1[0]+(p2[0]-p0[0])/6).toFixed(1), cp1y=(p1[1]+(p2[1]-p0[1])/6).toFixed(1);
+      const cp2x=(p2[0]-(p3[0]-p1[0])/6).toFixed(1), cp2y=(p2[1]-(p3[1]-p1[1])/6).toFixed(1);
+      d+=` C${cp1x},${cp1y} ${cp2x},${cp2y} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`;
+    }
+    return d;
+  }
+  const linePath = smooth(pts);
+  const areaPath = `${linePath} L${pts[pts.length-1][0].toFixed(1)},${H-pad} L${pts[0][0].toFixed(1)},${H-pad} Z`;
+  el.innerHTML = `
+    <path d="${areaPath}" fill="${colour}" opacity="0.14"/>
+    <path d="${linePath}" fill="none" stroke="${colour}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  `;
+}
+
+// ── INDUCTION JOURNEY ─────────────────────────────────────────────
+async function loadInduction(){
+  const safeQ = (p) => p.then(r => r).catch(err => { console.warn('[loadInduction]', err?.message||err); return { data: [] }; });
+  const [{ data:weeks }, { data:comps }, { data:assess }] = await Promise.all([
+    safeQ(sb.from('induction_weeks').select('*')
+      .order('is_extra',{ascending:true})
+      .order('week_number',{ascending:true,nullsFirst:false})
+      .order('sort_order',{ascending:true,nullsFirst:false})
+      .order('created_at',{ascending:true})),
+    safeQ(sb.from('module_completions').select('resource_id').eq('instructor_id', ME.id).eq('resource_type','induction_week')),
+    safeQ(sb.from('induction_assessments').select('*').eq('instructor_id', ME.id).order('submitted_at',{ascending:false}).limit(1))
+  ]);
+  INDUCTION_WEEKS = weeks || [];
+  MY_COMPLETIONS = new Set((comps||[]).map(c=>c.resource_id));
+  MY_ASSESSMENT = (assess||[])[0] || null;
+
+  const list = document.getElementById('week-list');
+  if (!INDUCTION_WEEKS.length){
+    list.innerHTML = '<div class="card"><p style="font-size:0.82rem;color:var(--muted)">Your Sondr Fundamentals will appear here once Gagan has set it up.</p></div>';
+    document.getElementById('jp-text').textContent = 'Awaiting setup';
+    return;
+  }
+
+  const done = INDUCTION_WEEKS.filter(w=>MY_COMPLETIONS.has(w.id)).length;
+  const total = INDUCTION_WEEKS.length;
+  const pct = Math.round((done/total)*100);
+  document.getElementById('jp-fill').style.width = pct+'%';
+  document.getElementById('jp-text').textContent = `${done} of ${total} complete`;
+  document.getElementById('jp-pct').textContent = pct+'%';
+
+  // Show nav badge if any new (uncompleted) weeks
+  const remaining = total - done;
+  if (remaining > 0){
+    const b = document.getElementById('nb-induction');
+    b.textContent = remaining; b.style.display='inline-block';
+  }
+
+  list.innerHTML = INDUCTION_WEEKS.map(w => weekCard(w)).join('');
+  renderReading();
+}
+
+function renderReading(){
+  const el = document.getElementById('reading-list'); if (!el) return;
+  const items = (INDUCTION_WEEKS||[]).filter(w=>w.worksheet_path);
+  if (!items.length){
+    el.innerHTML = '<p style="color:var(--muted);line-height:1.7">No reading material uploaded yet. Worksheets and PDFs from your Sondr Fundamentals weeks will appear here as they are published.</p>';
+    document.getElementById('nb-reading').style.display='none';
+    return;
+  }
+  el.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0.9rem">
+    ${items.map(w=>`
+      <a class="card" style="margin:0;cursor:pointer;display:flex;flex-direction:column;gap:0.5rem;text-decoration:none;color:inherit;border-left:3px solid var(--blush)"
+         onclick="playMaterial('${w.worksheet_path.replace(/'/g,"\\'")}','training-materials')">
+        <div style="font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--blush);font-weight:500">${w.is_extra ? 'Extra' : 'Week '+w.week_number}</div>
+        <div style="font-family:var(--fd);font-size:1.1rem;color:var(--ink);line-height:1.3">${w.worksheet_title||'Worksheet'}</div>
+        <div style="color:var(--muted);font-size:0.85rem;line-height:1.5">${w.title||''}</div>
+        <div style="margin-top:auto;color:var(--blush);font-size:0.85rem;font-weight:500">📄 Open / Download →</div>
+      </a>`).join('')}
+  </div>`;
+  const b = document.getElementById('nb-reading');
+  if (b){ b.textContent = items.length; b.style.display='inline-block'; }
+}
+
+function weekCard(w){
+  const completed = MY_COMPLETIONS.has(w.id);
+  const cls = ['week-card', completed?'completed':''].filter(Boolean).join(' ');
+  const playBtn = w.video_path
+    ? `<a class="week-resource" onclick="openVideoModal('${w.id}','${w.video_path.replace(/'/g,"\\'")}','training-materials','${(w.title||'').replace(/'/g,"\\'")}')">▶ Watch</a>`
+    : `<span class="week-resource disabled">▶ Video coming soon</span>`;
+  const docBtn = w.worksheet_path
+    ? `<a class="week-resource" onclick="playMaterial('${w.worksheet_path.replace(/'/g,"\\'")}','training-materials')">📄 ${w.worksheet_title||'Worksheet'}</a>`
+    : '';
+  const action = w.action_item
+    ? `<div class="week-action-item"><strong>Action</strong>${w.action_item}</div>` : '';
+
+  return `<div class="${cls}" data-week-id="${w.id}">
+    <div class="week-card-head">
+      <div class="week-meta">
+        <p class="week-title">${w.title}</p>
+        ${w.focus?`<p class="week-focus">${w.focus}</p>`:''}
+      </div>
+      <label class="week-mark ${completed?'done':''}">
+        <input type="checkbox" ${completed?'checked':''} onchange="toggleWeek('${w.id}',this.checked)"/>
+        ${completed?'Complete':'Mark done'}
+      </label>
+    </div>
+    ${w.description?`<p class="week-desc">${w.description}</p>`:''}
+    ${action}
+    <div class="week-actions">
+      ${playBtn}
+      ${docBtn}
+    </div>
+  </div>`;
+}
+
+window.toggleWeek = async (id, checked) => {
+  const card = document.querySelector(`[data-week-id="${id}"]`);
+  const cb = card?.querySelector('input[type="checkbox"]');
+  if (cb) cb.disabled = true;
+  try {
+    if (checked){
+      const { data: existing } = await sb.from('module_completions')
+        .select('id').eq('instructor_id', ME.id).eq('resource_type','induction_week').eq('resource_id', id).maybeSingle();
+      if (!existing) {
+        const { error } = await sb.from('module_completions').insert({
+          instructor_id: ME.id, resource_type: 'induction_week', resource_id: id
+        });
+        if (error) { alert('Could not mark week complete: '+error.message); if(cb) cb.checked=false; }
+      }
+      await ttComplete();
+    } else {
+      const { error } = await sb.from('module_completions').delete()
+        .eq('instructor_id', ME.id).eq('resource_type','induction_week').eq('resource_id', id);
+      if (error) { alert('Could not unmark week: '+error.message); if(cb) cb.checked=true; }
+    }
+  } finally {
+    await loadInduction();
+  }
+};
+
+window.playMaterial = async (path, bucket) => {
+  if (!path) return alert('No file attached.');
+  const { data, error } = await sb.storage.from(bucket).createSignedUrl(path, 3600);
+  if (error) return alert('Could not open: '+error.message);
+  window.open(data.signedUrl, '_blank');
+};
+
+// ── CONTENT BANNER (doc / video / assignment pop-up) ─────────────
+const _shownBanners = new Set();
+function showContentBanner(icon, title, msg, onView) {
+  const existing = document.getElementById('content-banner');
+  if (existing) existing.remove();
+  const banner = document.createElement('div');
+  banner.id = 'content-banner';
+  banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:var(--ink);color:var(--parch);padding:0.85rem 1.3rem;display:flex;align-items:center;gap:1rem;justify-content:space-between;box-shadow:0 4px 20px rgba(20,16,14,0.28);animation:cbSlideIn 0.3s ease';
+  banner.innerHTML = `
+    <div style="display:flex;align-items:center;gap:0.9rem;flex:1;min-width:0">
+      <span style="font-size:1.5rem;flex-shrink:0">${icon}</span>
+      <div style="min-width:0">
+        <p style="font-weight:600;font-family:var(--fd);font-size:0.95rem;color:var(--parch);margin-bottom:0.1rem">${title}</p>
+        <p style="font-size:0.76rem;opacity:0.72;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:480px">${msg}</p>
+      </div>
+    </div>
+    <div style="display:flex;gap:0.6rem;flex-shrink:0">
+      <button id="cb-view-btn" style="background:#ddb9ab;border:none;color:var(--ink);padding:0.4rem 1rem;font-size:0.68rem;font-family:var(--fb);cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;font-weight:700">View</button>
+      <button onclick="document.getElementById('content-banner')?.remove()" style="background:transparent;border:none;color:rgba(237,224,212,0.55);font-size:1.4rem;cursor:pointer;padding:0 0.3rem;line-height:1">×</button>
+    </div>`;
+  if (!document.getElementById('cb-anim-style')) {
+    const s = document.createElement('style'); s.id='cb-anim-style';
+    s.textContent='@keyframes cbSlideIn{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}';
+    document.head.appendChild(s);
+  }
+  document.body.appendChild(banner);
+  banner.querySelector('#cb-view-btn').onclick = () => { banner.remove(); if (onView) onView(); };
+  setTimeout(() => { if (banner.parentNode){ banner.style.transition='opacity 0.3s'; banner.style.opacity='0'; setTimeout(()=>banner.remove(),300); } }, 12000);
+}
+async function goToNotif(n) {
+  const ntype = n.type||n.resource_type||'';
+  if (n.id) sb.from('notifications').update({is_read:true}).eq('id',n.id).then(()=>{}).catch(()=>{});
+  if (ntype==='training_document'||ntype==='new_worksheet') {
+    await loadTrainingVideos();
+    goPage('training');
+    if (n.resource_id) {
+      const v = TRAINING_VIDEOS.find(x=>x.id===n.resource_id);
+      if (v) setTimeout(()=>openDocModal(v.id,v.storage_path,'training-materials',v.title),400);
+    }
+  } else if (ntype==='assignment') {
+    await loadMyAssignments();
+    goPage('training');
+  } else if (ntype==='training_video'||ntype==='new_video'||ntype==='video') {
+    await loadTrainingVideos();
+    goPage('training');
+    if (n.resource_id) {
+      const v = TRAINING_VIDEOS.find(x=>x.id===n.resource_id);
+      if (v) setTimeout(()=>openVideoModal(v.id,v.storage_path,'training-materials',v.title),400);
+    }
+  }
+}
+
+// ── NOTIFICATIONS ─────────────────────────────────────────────────
+async function loadNotifications() {
+  const { data } = await sb.from('notifications').select('*').eq('recipient_id',ME.id).order('created_at',{ascending:false}).limit(30);
+  const unread = (data||[]).filter(n=>!n.is_read);
+  document.getElementById('notif-dot').style.display = unread.length>0?'block':'none';
+
+  const trainingUnread = unread.filter(n=>n.resource_type==='training_video'||n.resource_type==='video');
+  const fundUnread     = unread.filter(n=>n.resource_type==='fundamentals_video'||n.resource_type==='fundamentals_worksheet');
+  if (trainingUnread.length){ const b=document.getElementById('nb-videos'); b.textContent=trainingUnread.length; b.style.display='inline-block'; }
+  if (fundUnread.length){ const b=document.getElementById('nb-induction'); b.textContent=(parseInt(b.textContent)||0)+fundUnread.length; b.style.display='inline-block'; }
+
+  // Auto-show unread feedback as modal on load (most recent unread one)
+  const unreadFeedback = unread.filter(n=>n.type==='feedback'||n.resource_type==='feedback');
+  if (unreadFeedback.length) {
+    const f = unreadFeedback[0];
+    showFbModal(f.message||'', f.title||'New Feedback', f.created_at, f.id);
+  }
+
+  // Auto-show unread broadcast
+  const unreadBC = unread.filter(n=>n.type==='broadcast');
+  if (unreadBC.length && !unreadFeedback.length) {
+    const b = unreadBC[0];
+    showBCModal(b.title, b.message||'', b.created_at, b.id);
+  }
+
+  // Pop-up banner for unread document / video / assignment notifications (once per session)
+  const uploadTypes = ['training_document','new_worksheet','assignment','training_video','new_video','video'];
+  const uploadUnread = unread.filter(n=>uploadTypes.includes(n.type||n.resource_type||'') && !_shownBanners.has(n.id));
+  if (uploadUnread.length) {
+    const n = uploadUnread[0];
+    _shownBanners.add(n.id);
+    const nt = n.type||n.resource_type||'';
+    const icon = nt==='training_document'||nt==='new_worksheet' ? '📄' : nt==='assignment' ? '📋' : '🎬';
+    showContentBanner(icon, n.title||'New Content', n.message||'New item added to your portal', () => goToNotif(n));
+  }
+
+  const list = document.getElementById('notif-list');
+  if (!data?.length){ list.innerHTML='<p class="notif-empty">No notifications yet.</p>'; return; }
+  list.innerHTML = data.map(n=>{
+    const ntype = n.type||n.resource_type||'';
+    const safe = JSON.stringify({
+      path:n.storage_path||'', bucket:n.storage_bucket||'',
+      type:ntype, message:n.message||'', title:n.title||'',
+      date:n.created_at
+    }).replace(/"/g,"&quot;");
+    return `<div class="notif-item ${n.is_read?'':'unread'}" onclick='openNotif("${n.id}", ${safe}, this)'>
+      <p class="notif-item-title">${n.title}</p>
+      <p class="notif-item-msg">${n.message||''}</p>
+      <p class="notif-item-time">${timeAgo(n.created_at)}</p>
+    </div>`;
+  }).join('');
+}
+window.openNotif = async (id, info, el) => {
+  await sb.from('notifications').update({ is_read:true }).eq('id', id);
+  el.classList.remove('unread');
+  const left = document.querySelectorAll('.notif-item.unread').length;
+  document.getElementById('notif-dot').style.display = left>0?'block':'none';
+  document.getElementById('notif-panel').classList.remove('open');
+
+  const rt = info?.type || '';
+
+  if (rt === 'feedback') {
+    // Show prominent feedback modal AND navigate home
+    showFbModal(info.message, info.title, info.date, null);
+    goPage('messages');
+    return;
+  }
+  if (rt === 'broadcast') {
+    showBCModal(info.title, info.message, info.date, null);
+    goPage('messages');
+    return;
+  }
+  if (info?.path && info?.bucket) {
+    const { data, error } = await sb.storage.from(info.bucket).createSignedUrl(info.path, 3600);
+    if (!error) { window.open(data.signedUrl, '_blank'); return; }
+  }
+  if (rt === 'fundamentals_video' || rt === 'fundamentals_worksheet') goPage('induction');
+  else if (rt === 'training_video' || rt === 'new_video' || rt === 'video') goPage('training');
+  else if (rt === 'worksheet' || rt === 'new_worksheet') goPage('reading');
+  else if (rt === 'note' || rt === 'weekly_report' || rt === 'observation_log') goPage('notes');
+  else goPage('home');
+};
+window.readNotif = window.openNotif;
+window.markAllRead = async () => {
+  await sb.from('notifications').update({ is_read:true }).eq('recipient_id',ME.id).eq('is_read',false);
+  document.querySelectorAll('.notif-item').forEach(el=>el.classList.remove('unread'));
+  document.getElementById('notif-dot').style.display='none';
+  document.getElementById('nb-videos').style.display='none';
+  loadNotifications();
+};
+
+// ── FEEDBACK MODAL ────────────────────────────────────────────────
+function showFbModal(message, fromLabel, dateStr, notifId) {
+  document.getElementById('fb-modal-from').textContent = fromLabel || 'From Gagan';
+  document.getElementById('fb-modal-body').textContent = message || '';
+  document.getElementById('fb-modal-date').textContent = dateStr ? new Date(dateStr).toLocaleDateString('en-KE',{day:'numeric',month:'long',year:'numeric', hour:'2-digit', minute:'2-digit'}) : '';
+  document.getElementById('feedback-modal').classList.add('open');
+  // Mark the notification read if id provided
+  if (notifId) sb.from('notifications').update({is_read:true}).eq('id',notifId).then(()=>{}).catch(()=>{});
+}
+window.closeFbModal = () => document.getElementById('feedback-modal').classList.remove('open');
+
+// ── BROADCAST MODAL ───────────────────────────────────────────────
+function showBCModal(title, message, dateStr, notifId) {
+  document.getElementById('bc-modal-title').textContent = title || 'Message from Sondr';
+  document.getElementById('bc-modal-body').textContent = message || '';
+  document.getElementById('bc-modal-date').textContent = dateStr ? new Date(dateStr).toLocaleDateString('en-KE',{day:'numeric',month:'long',year:'numeric'}) : '';
+  document.getElementById('broadcast-modal').classList.add('open');
+  if (notifId) sb.from('notifications').update({is_read:true}).eq('id',notifId).then(()=>{}).catch(()=>{});
+}
+window.closeBCModal = () => document.getElementById('broadcast-modal').classList.remove('open');
+
+// ── NOTE VIEWER MODAL ─────────────────────────────────────────────
+window.openNoteModal = (title, content, meta) => {
+  document.getElementById('note-viewer-title').textContent = title || 'Note';
+  document.getElementById('note-viewer-body').textContent = content || '';
+  document.getElementById('note-viewer-meta').textContent = meta || '';
+  document.getElementById('note-viewer-modal').classList.add('open');
+};
+window.closeNoteModal = () => document.getElementById('note-viewer-modal').classList.remove('open');
+
+// ── DAILY CHECK-IN ────────────────────────────────────────────────
+document.querySelectorAll('.check-list input[type="checkbox"]').forEach(cb=>cb.addEventListener('change', updateScore));
+function updateScore(){
+  const score = [...document.querySelectorAll('.check-list input[type="checkbox"]')].filter(b=>b.checked).length;
+  document.getElementById('score-num').innerHTML = `${score}<span style="font-size:1.2rem;color:var(--muted)">/6</span>`;
+  const pct = (score/6*100).toFixed(0)+'%';
+  const fill = document.getElementById('score-fill');
+  const lbl = document.getElementById('score-lbl');
+  const map = ['','#e04040','#e04040','#E8A838','#E8A838','#4CAF82','#4CAF82'];
+  const labels = ['','Needs work','Needs work','Getting there','Getting there','Great session','Perfect'];
+  fill.style.width=pct; fill.style.background=map[score];
+  lbl.textContent=labels[score]; lbl.style.color=map[score];
+}
+document.getElementById('checkin-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn=document.getElementById('ci-btn'); btn.disabled=true; btn.textContent='Submitting…';
+  const fd=new FormData(e.target);
+  try {
+    const { error } = await sb.from('daily_checkins').insert({
+      instructor_id: ME.id,
+      class_delivered: fd.get('class_delivered')==='on',
+      arrived_on_time: fd.get('arrived_on_time')==='on',
+      props_prepped: fd.get('props_prepped')==='on',
+      modifications_offered: fd.get('modifications_offered')==='on',
+      used_names: fd.get('used_names')==='on',
+      closed_mindfully: fd.get('closed_mindfully')==='on',
+      client_note: fd.get('client_note')||null,
+      arrived_early: fd.get('arrived_early')||null,
+      classes_today: fd.get('classes_today') ? parseInt(fd.get('classes_today')) : null,
+    });
+    if (error) throw error;
+    await ttComplete();
+    const score = [fd.get('class_delivered'),fd.get('arrived_on_time'),fd.get('props_prepped'),fd.get('modifications_offered'),fd.get('used_names'),fd.get('closed_mindfully')].filter(v=>v==='on').length;
+    await notifyStaff('daily_checkin',`✅ Daily Check-In — ${PROFILE?.full_name||'Instructor'}`,`Score: ${score}/6 · ${new Date().toLocaleDateString('en-KE',{day:'numeric',month:'short'})}${fd.get('client_note')?' · Client note flagged':''}`, 'daily_checkin');
+    showAlert('ci-ok'); e.target.reset(); updateScore();
+    switchCITab('accountability');
+    await Promise.all([loadGlance(), loadHistory(), checkDailyTaskCap()]);
+  } catch(err){ showErr('ci-err', err.message); }
+  btn.disabled=false; btn.textContent='Submit Check-In';
+});
+
+// ── SELF-PRACTICE (Log Practice form removed; only Class Format Log remains) ──
+{
+  const _spForm = document.getElementById('sp-form');
+  if (_spForm) _spForm.addEventListener('submit', e => e.preventDefault());
+}
+
+// ── CLASS FORMAT LOG (Self-Practice module) ───────────────────────
+document.getElementById('clf-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn=document.getElementById('clf-btn'); btn.disabled=true; btn.textContent='Saving…';
+  const fd=new FormData(e.target);
+  try {
+    const content = [
+      `SESSION TYPE: ${fd.get('session_type')}`,
+      `\nCLASS PLAN`,
+      `THEME / INTENTION:\n${fd.get('theme_intention')||'—'}`,
+      `WARM UP:\n${fd.get('warm_up')||'—'}`,
+      `FIRST SEQUENCE:\n${fd.get('seq_1')||'—'}`,
+      `SECOND SEQUENCE:\n${fd.get('seq_2')||'—'}`,
+      `THIRD SEQUENCE:\n${fd.get('seq_3')||'—'}`,
+      `FOURTH SEQUENCE:\n${fd.get('seq_4')||'—'}`,
+      `FIFTH SEQUENCE:\n${fd.get('seq_5')||'—'}`,
+      `FINISHER / INTEGRATION:\n${fd.get('finisher')||'—'}`,
+      `\nSELF PRACTICE REFLECTION`,
+      `WHAT FELT STRONG:\n${fd.get('felt_strong')||'—'}`,
+      `WHAT NEEDS REFINEMENT:\n${fd.get('needs_refinement')||'—'}`,
+      `\nKEY TEACHING TAKEAWAYS:\n${fd.get('teaching_takeaways')||'—'}`,
+      `\nCUEING PRACTICE:\n${fd.get('cueing_practice')||'—'}`,
+      `\nCLIENT LENS:\n${fd.get('client_lens')||'—'}`,
+      `\nNEXT SESSION FOCUS:\n${fd.get('next_session_focus')||'—'}`,
+      `\nADDITIONAL NOTES:\n${fd.get('additional_notes')||'—'}`,
+    ].join('\n');
+    const { error } = await sb.from('notes').insert({
+      instructor_id: ME.id,
+      title: `Class Format Log — ${fd.get('session_type')} — ${new Date().toLocaleDateString('en-KE',{day:'numeric',month:'short',year:'numeric'})}`,
+      content,
+      is_private: false,
+    });
+    if (error) throw error;
+    // Also write a summary entry to self_practice_logs so owner/admin see it immediately
+    const today = new Date().toISOString().slice(0,10);
+    const durMins = parseInt(fd.get('duration_minutes'), 10) || 60;
+    const { error: spErr } = await sb.from('self_practice_logs').insert({
+      instructor_id: ME.id,
+      practice_date: today,
+      duration_minutes: durMins,
+      focus_area: fd.get('session_type') || 'Self Practice',
+      notes: fd.get('next_session_focus') || fd.get('felt_strong') || null
+    });
+    if (spErr) throw spErr;
+    // Notify owner/admin so they see activity immediately
+    await notifyStaff(
+      'self_practice',
+      `🧘 Self-Practice — ${PROFILE?.full_name||'Instructor'}`,
+      `${fd.get('session_type')||'Practice session'} · ${new Date().toLocaleDateString('en-KE',{day:'numeric',month:'short'})}`,
+      'self_practice'
+    );
+    showAlert('clf-ok'); e.target.reset();
+    // Refresh the saved log list below the form immediately
+    await loadSelfPractice();
+    // Scroll saved list into view
+    document.getElementById('sp-list')?.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  } catch(err){ showErr('clf-err', err.message); }
+  btn.disabled=false; btn.textContent='Save Class Format Log';
+});
+async function loadSelfPractice(){
+  const sinceMonth = new Date(); sinceMonth.setDate(1); sinceMonth.setHours(0,0,0,0);
+  const { data } = await sb.from('self_practice_logs').select('*').eq('instructor_id', ME.id).order('practice_date',{ascending:false}).limit(60);
+  const list = document.getElementById('sp-list');
+  const monthCount = (data||[]).filter(r=>new Date(r.practice_date)>=sinceMonth).length;
+  document.getElementById('sp-total').textContent = monthCount+' session'+(monthCount===1?'':'s')+' this month';
+  list.innerHTML = data?.length ? data.map(r=>`
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:0.85rem 0;border-bottom:1px solid rgba(201,165,154,0.12);gap:1rem;flex-wrap:wrap">
+      <div style="flex:1;min-width:180px">
+        <p style="font-family:var(--fd);font-size:1.02rem;font-weight:400">${r.focus_area||'Practice session'}</p>
+        <p style="font-size:0.7rem;color:var(--muted-l);margin-top:0.15rem">${new Date(r.practice_date).toLocaleDateString('en-KE',{weekday:'short',day:'numeric',month:'long',year:'numeric'})}</p>
+        ${r.notes?`<p style="font-size:0.78rem;color:var(--muted);margin-top:0.5rem;line-height:1.6">${r.notes}</p>`:''}
+      </div>
+      <a style="font-size:0.68rem;color:var(--err);cursor:pointer;white-space:nowrap;flex-shrink:0;padding-top:0.25rem" onclick="deleteSelfPracticeLog('${r.id}')">Delete</a>
+    </div>`).join('') : '<p style="font-size:0.82rem;color:var(--muted)">No self-practice logged yet.</p>';
+}
+
+window.deleteSelfPracticeLog = async (logId) => {
+  if (!confirm('Delete this practice log entry? This cannot be undone.')) return;
+  const { error } = await sb.from('self_practice_logs').delete().eq('id', logId);
+  if (error) { alert('Could not delete: ' + error.message); return; }
+  await loadSelfPractice();
+};
+
+// ── TRAINING VIDEOS + DOCS + ASSIGNMENTS ─────────────────────────
+async function loadTrainingVideos() {
+  const { data } = await sb.from('videos').select(`*, profiles(full_name)`)
+    .eq('is_owner_upload', true)
+    .neq('category','fundamentals')
+    .order('uploaded_at',{ascending:false});
+  TRAINING_VIDEOS = data || [];
+  const list  = document.getElementById('training-list');
+  const home  = document.getElementById('owner-videos-home');
+  const hlist = document.getElementById('owner-vids-list');
+  const count = document.getElementById('new-vid-count');
+
+  // Separate by type
+  const regularVids = TRAINING_VIDEOS.filter(v=>v.category!=='training_document' && v.category!=='assignment');
+  const docs = TRAINING_VIDEOS.filter(v=>v.category==='training_document');
+  const myAssignments = TRAINING_VIDEOS.filter(v=>v.category==='assignment' && (v.description||'').includes('[assigned_to:'+ME.id+']'));
+
+  const totalItems = regularVids.length + docs.length + myAssignments.length;
+  if (!totalItems){
+    list.innerHTML = '<p style="font-size:0.82rem;color:var(--muted)">No training materials uploaded yet.</p>';
+    return;
+  }
+  home.style.display='block';
+  count.textContent = totalItems+' item'+(totalItems>1?'s':'');
+
+  const { data:comps } = await sb.from('module_completions').select('resource_id')
+    .eq('instructor_id',ME.id).in('resource_type',['video','training_video']);
+  const doneSet = new Set((comps||[]).map(c=>c.resource_id));
+
+  let html = '';
+  if (docs.length) html += `<p style="font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;margin-top:0.2rem;font-weight:600">Documents</p>${docs.map(v=>docCard(v)).join('')}`;
+  if (regularVids.length) html += (docs.length?`<p style="font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin:1rem 0 0.5rem;font-weight:600">Videos</p>`:'') + regularVids.map(v=>trainingCard(v, doneSet.has(v.id))).join('');
+  if (myAssignments.length) html += `<p style="font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin:1rem 0 0.5rem;font-weight:600">My Assignments</p>${myAssignments.map(v=>trainingCard(v, doneSet.has(v.id))).join('')}`;
+  list.innerHTML = html;
+  hlist.innerHTML = regularVids.slice(0,3).map(v=>videoItem(v)).join('');
+}
+
+function docCard(v){
+  const titleSafe=(v.title||'').replace(/'/g,"\\'");
+  const dateStr=new Date(v.uploaded_at).toLocaleDateString('en-KE',{day:'numeric',month:'short',year:'numeric'});
+  return `<div style="border:1px solid rgba(201,165,154,0.18);padding:1rem 1.1rem;margin-bottom:0.8rem;background:var(--white)">
+    <div style="display:flex;justify-content:space-between;gap:0.8rem;align-items:flex-start">
+      <div style="flex:1;min-width:0;cursor:pointer" onclick="openDocModal('${v.id}','${v.storage_path}','training-materials','${titleSafe}')">
+        <div style="display:flex;align-items:center;gap:0.55rem;margin-bottom:0.2rem">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ddb9ab" stroke-width="1.5"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <p style="font-family:var(--fd);font-size:1.05rem;color:var(--ink);font-weight:600">${v.title}</p>
+        </div>
+        <p style="font-size:0.7rem;color:var(--muted-l);letter-spacing:0.04em">Document · ${dateStr}</p>
+      </div>
+    </div>
+    <div style="margin-top:0.7rem">
+      <button class="btn-ghost" style="padding:0.45rem 0.9rem;font-size:0.58rem" onclick="openDocModal('${v.id}','${v.storage_path}','training-materials','${titleSafe}')">📄 Open &amp; Notes</button>
+    </div>
+  </div>`;
+}
+
+function trainingCard(v, completed){
+  const cats = { technique:'Technique', choreography:'Choreography', personal:'Personal', training:'Training', announcement:'Announcement' };
+  const label = cats[v.category]||v.category||'Material';
+  const dateStr = new Date(v.uploaded_at).toLocaleDateString('en-KE',{day:'numeric',month:'short',year:'numeric'});
+  const titleSafe = (v.title||'').replace(/'/g,"\\'");
+  return `<div style="border:1px solid rgba(201,165,154,0.18);padding:1rem 1.1rem;margin-bottom:0.8rem;background:var(--white);border-radius:0">
+    <div style="display:flex;justify-content:space-between;gap:0.8rem;align-items:flex-start">
+      <div style="flex:1;min-width:0;cursor:pointer" onclick="openVideoModal('${v.id}','${v.storage_path}','training-materials','${titleSafe}')">
+        <p style="font-family:var(--fd);font-size:1.05rem;color:var(--ink);font-weight:600;margin-bottom:0.2rem">${v.title}</p>
+        <p style="font-size:0.7rem;color:var(--muted-l);letter-spacing:0.04em">${label} · ${dateStr}</p>
+      </div>
+      <label style="display:flex;align-items:center;gap:0.4rem;font-size:0.66rem;color:var(--muted);cursor:pointer;white-space:nowrap;letter-spacing:0.06em;text-transform:uppercase">
+        <input type="checkbox" ${completed?'checked':''} onchange="toggleVidComplete('${v.id}',this.checked)" style="accent-color:#C9A59A;width:16px;height:16px"/>
+        ${completed?'Completed':'Mark done'}
+      </label>
+    </div>
+    <div style="margin-top:0.7rem;display:flex;gap:0.5rem;flex-wrap:wrap">
+      <button class="btn-ghost" style="padding:0.45rem 0.9rem;font-size:0.58rem" onclick="openVideoModal('${v.id}','${v.storage_path}','training-materials','${titleSafe}')">▶ Watch &amp; Notes</button>
+    </div>
+  </div>`;
+}
+window.toggleVidComplete = async (id, checked) => {
+  if (checked){
+    await sb.from('module_completions').insert({ instructor_id:ME.id, resource_type:'training_video', resource_id:id }).then(()=>{}, ()=>{});
+    await ttComplete();
+  } else {
+    await sb.from('module_completions').delete().eq('instructor_id',ME.id).in('resource_type',['video','training_video']).eq('resource_id',id);
+  }
+};
+
+// ── MY VIDEOS ─────────────────────────────────────────────────────
+async function loadMyVideos() {
+  const { data } = await sb.from('videos').select('*').eq('instructor_id',ME.id).eq('is_owner_upload',false).order('uploaded_at',{ascending:false});
+  const list = document.getElementById('my-vids-list');
+  list.innerHTML = data?.length ? data.map(v=>videoItem(v)).join('') : '<p style="font-size:0.82rem;color:var(--muted)">No videos uploaded yet.</p>';
+}
+
+document.getElementById('video-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn=document.getElementById('vid-btn'); btn.disabled=true; btn.textContent='Uploading…';
+  const fd=new FormData(e.target);
+  const file=fd.get('file');
+  if (!file?.size){ showErr('vid-err','Please select a video file.'); btn.disabled=false; btn.textContent='Upload Video'; return; }
+  if (file.size > 500*1024*1024){ showErr('vid-err','File exceeds 500MB limit.'); btn.disabled=false; btn.textContent='Upload Video'; return; }
+
+  const prog=document.getElementById('up-progress'), fill=document.getElementById('up-fill'), ulbl=document.getElementById('up-label');
+  prog.style.display='block'; fill.style.width='2%'; ulbl.textContent='Starting upload…';
+  try {
+    const path = `${ME.id}/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;
+    await fastUpload('instructor-videos', path, file, pct => {
+      fill.style.width = pct+'%';
+      ulbl.textContent = pct<100 ? `Uploading… ${pct}%` : 'Finalising…';
+    });
+    fill.style.width='95%'; ulbl.textContent='Saving details…';
+
+    const isAssessment = fd.get('category') === 'assessment';
+
+    const { error: dbErr } = await sb.from('videos').insert({
+      instructor_id: ME.id,
+      title: fd.get('title'),
+      category: isAssessment ? 'assessment' : fd.get('category'),
+      description: fd.get('description')||null,
+      storage_path: path,
+      file_size: file.size,
+      is_owner_upload: false,
+    });
+    if (dbErr) throw dbErr;
+
+    // If assessment category, also record in induction_assessments
+    if (isAssessment){
+      await sb.from('induction_assessments').insert({
+        instructor_id: ME.id,
+        storage_path: path,
+        video_title: fd.get('title'),
+        notes: fd.get('description')||null,
+      });
+    }
+
+    fill.style.width='100%'; ulbl.textContent='Done!';
+    setTimeout(()=>{ prog.style.display='none'; fill.style.width='0'; }, 1500);
+    await ttComplete();
+    showAlert('vid-ok'); e.target.reset();
+    await Promise.all([loadMyVideos(), loadInduction()]);
+  } catch(err){
+    showErr('vid-err', err.message || 'Upload failed.'); prog.style.display='none';
+  }
+  btn.disabled=false; btn.textContent='Upload Video';
+});
+
+function videoItem(v) {
+  const cats = { technique:'Technique', choreography:'Choreography', personal:'Personal', training:'Training', announcement:'Announcement', assessment:'Assessment' };
+  const bkt = v.is_owner_upload ? 'training-materials' : 'instructor-videos';
+  const titleSafe = (v.title||'').replace(/'/g,"\\'");
+  return `<div class="video-item" style="cursor:pointer" onclick="openVideoModal('${v.id}','${v.storage_path}','${bkt}','${titleSafe}')">
+    <div class="video-thumb"><svg viewBox="0 0 24 24"><path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+    <div class="video-info">
+      <p class="video-title">${v.title}</p>
+      <p class="video-meta">${new Date(v.uploaded_at).toLocaleDateString('en-KE',{day:'numeric',month:'short',year:'numeric'})}${v.profiles?' · By '+v.profiles.full_name:''}</p>
+    </div>
+    <span class="video-cat">${cats[v.category]||v.category}</span>
+  </div>`;
+}
+
+// ── NOTES ─────────────────────────────────────────────────────────
+async function loadNotes() {
+  const { data } = await sb.from('notes').select('*').eq('instructor_id',ME.id).order('created_at',{ascending:false}).limit(80);
+  const list = document.getElementById('notes-list');
+  list.innerHTML = data?.length ? data.map(n=>`
+    <div class="note-card">
+      <p class="note-title">${n.title}</p>
+      <p class="note-body">${(n.content||'').substring(0,300)}${(n.content||'').length>300?'…':''}</p>
+      <div class="note-footer">
+        <span class="note-date">${new Date(n.created_at).toLocaleDateString('en-KE',{day:'numeric',month:'short',year:'numeric'})}</span>
+      </div>
+    </div>`).join('') : '<p style="font-size:0.82rem;color:var(--muted)">No notes yet.</p>';
+}
+document.getElementById('note-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const fd=new FormData(e.target);
+  try {
+    const { error } = await sb.from('notes').insert({
+      instructor_id: ME.id, title: fd.get('title'), content: fd.get('content'), is_private: false
+    });
+    if (error) throw error;
+    await notifyStaff(
+      'note',
+      `📝 Note — ${PROFILE?.full_name||'Instructor'}`,
+      `${fd.get('title')} · ${(fd.get('content')||'').slice(0,100)}`,
+      'note'
+    );
+    await ttComplete();
+    showAlert('note-ok'); e.target.reset(); await loadNotes();
+  } catch(err){ console.error(err); }
+});
+
+// ── HISTORY ───────────────────────────────────────────────────────
+async function loadHistory() {
+  const { data } = await sb.from('daily_checkins').select('*').eq('instructor_id',ME.id).order('submitted_at',{ascending:false}).limit(60);
+  const tbody = document.getElementById('hist-body');
+  if (!data?.length){ tbody.innerHTML='<tr><td colspan="8" style="padding:1.5rem;text-align:center;color:var(--muted)">No check-ins yet.</td></tr>'; return; }
+  const t=(ok)=>`<span class="${ok?'tick':'cross'}">${ok?'✓':'—'}</span>`;
+  const sp=(s)=>`<span class="score-pill ${s>=5?'sp-hi':s>=3?'sp-md':'sp-lo'}">${s??0}/6</span>`;
+  tbody.innerHTML = data.map(c=>`<tr>
+    <td>${new Date(c.submitted_at).toLocaleDateString('en-KE',{day:'numeric',month:'short'})}</td>
+    <td>${sp(c.compliance_score)}</td>
+    <td>${t(c.class_delivered)}</td><td>${t(c.arrived_on_time)}</td>
+    <td>${t(c.props_prepped)}</td><td>${t(c.modifications_offered)}</td>
+    <td>${t(c.used_names)}</td><td>${t(c.closed_mindfully)}</td>
+  </tr>`).join('');
+}
+
+// ── CHANGE PASSWORD ───────────────────────────────────────────────
+document.getElementById('pw-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn=document.getElementById('pw-btn'); btn.disabled=true; btn.textContent='Updating…';
+  const p1=document.getElementById('npw').value, p2=document.getElementById('cpw').value;
+  if (p1.length<8){ showErr('pw-err','Minimum 8 characters.'); btn.disabled=false; btn.textContent='Update Password'; return; }
+  if (p1!==p2){ showErr('pw-err','Passwords do not match.'); btn.disabled=false; btn.textContent='Update Password'; return; }
+  const { error } = await sb.auth.updateUser({ password:p1 });
+  if (error){ showErr('pw-err', error.message); } else { showAlert('pw-ok'); e.target.reset(); }
+  btn.disabled=false; btn.textContent='Update Password';
+});
+window.pwStrength = pw => {
+  let s=0;
+  if(pw.length>=8)s++; if(pw.length>=12)s++;
+  if(/[A-Z]/.test(pw))s++; if(/[0-9]/.test(pw))s++; if(/[^A-Za-z0-9]/.test(pw))s++;
+  const map=[['0%','',''],['25%','#e04040','Weak'],['50%','#E8A838','Fair'],['75%','#4CAF82','Good'],['100%','#2D8A5E','Strong']];
+  const [w,c,t]=map[Math.min(s,4)];
+  const f=document.getElementById('pw-sfill'), l=document.getElementById('pw-slbl');
+  f.style.width=w; f.style.background=c; l.textContent=t; l.style.color=c;
+};
+
+// ── WEEKLY REPORT ─────────────────────────────────────────────────
+document.getElementById('weekly-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn=document.getElementById('wr-btn'); btn.disabled=true; btn.textContent='Submitting…';
+  const fd=new FormData(e.target);
+  try {
+    const { error } = await sb.from('notes').insert({
+      instructor_id: ME.id,
+      title: `Weekly Report — w/e ${fd.get('week_ending')}`,
+      content: `CLASSES OBSERVED:\n${fd.get('classes_observed')}\n\nPERSONAL PRACTICE & PREPARATION:\n${fd.get('personal_practice')}\n\nTEACHING REFLECTION — What went well:\n${fd.get('reflection_well')}\n\nTEACHING REFLECTION — Working to improve:\n${fd.get('reflection_improve')}\n\nCLIENT FEEDBACK / ISSUES:\n${fd.get('client_feedback')}\n\nTRAINING & DEVELOPMENT:\n${fd.get('training_dev')||'None'}\n\nSUPPORT NEEDED:\n${fd.get('support_needed')||'None'}`,
+      is_private: false,
+    });
+    if (error) throw error;
+    await notifyStaff(
+      'weekly_report',
+      `📋 Weekly Report — ${PROFILE?.full_name||'Instructor'}`,
+      `w/e ${fd.get('week_ending')} · ${(fd.get('reflection_well')||'See report').slice(0,100)}`,
+      'weekly_report'
+    );
+    await ttComplete();
+    showAlert('wr-ok'); e.target.reset();
+    document.getElementById('wr-date').valueAsDate = new Date();
+    await loadWeeklyReports();
+  } catch(err){ showErr('wr-err', err.message); }
+  btn.disabled=false; btn.textContent='Submit Weekly Report';
+});
+async function loadWeeklyReports() {
+  const { data } = await sb.from('notes').select('*').eq('instructor_id',ME.id).ilike('title','Weekly Report%').order('created_at',{ascending:false});
+  const list = document.getElementById('wr-list');
+  list.innerHTML = data?.length ? data.map(n=>`
+    <div style="padding:0.9rem 0;border-bottom:1px solid rgba(201,165,154,0.1)">
+      <p style="font-family:var(--fd);font-size:1rem;font-weight:600;color:var(--ink)">${n.title}</p>
+      <p style="font-size:0.72rem;color:var(--muted-l);margin-top:0.2rem">${new Date(n.created_at).toLocaleDateString('en-KE',{day:'numeric',month:'long',year:'numeric'})}</p>
+    </div>`).join('') : '<p style="font-size:0.82rem;color:var(--muted)">No reports submitted yet.</p>';
+}
+
+// ── OBSERVATION LOG ───────────────────────────────────────────────
+document.getElementById('obslog-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn=document.getElementById('ol-btn'); btn.disabled=true; btn.textContent='Saving…';
+  const fd=new FormData(e.target);
+  try {
+    const { error } = await sb.from('notes').insert({
+      instructor_id: ME.id,
+      title: `Observation Log — ${fd.get('obs_instructor')} — ${new Date(fd.get('obs_datetime')).toLocaleDateString('en-KE',{day:'numeric',month:'short',year:'numeric'})}`,
+      content: `INSTRUCTOR OBSERVED: ${fd.get('obs_instructor')}\nDATE & TIME: ${fd.get('obs_datetime')}\nCLASS TYPE: ${fd.get('class_type')}\n\n=== TEACHING CRAFT ===\n\n1. FLOW & SEQUENCING:\n${fd.get('flow_sequencing')}\n\n2. LAYERING & 360 MOVEMENT:\n${fd.get('layering')}\n\n3. CUEING & VOICE:\n${fd.get('cueing_voice')}\n\n4. MODIFICATIONS:\n${fd.get('modifications')}\n\n=== COMMUNITY PRESENCE ===\n\n5a. WELCOME & ATMOSPHERE:\n${fd.get('community_welcome')}\n\n5b. USE OF NAMES & PERSONAL CONNECTION:\n${fd.get('community_names')}\n\n5c. GROUP ENERGY & BELONGING:\n${fd.get('community_energy')}\n\n5d. CLOSING & HAND-OFF:\n${fd.get('community_closing')}\n\n=== FEEDBACK FOR INSTRUCTOR ===\n\n${fd.get('takeaways')}`,
+      is_private: false,
+    });
+    if (error) throw error;
+    await notifyStaff(
+      'observation_log',
+      `👁 Observation Log — ${PROFILE?.full_name||'Instructor'}`,
+      `Observed: ${fd.get('obs_instructor')} · ${fd.get('class_type')} · ${new Date(fd.get('obs_datetime')).toLocaleDateString('en-KE',{day:'numeric',month:'short'})}`,
+      'observation_log'
+    );
+    await ttComplete();
+    showAlert('ol-ok'); e.target.reset();
+    await Promise.all([loadObservationLogs(), loadGlance()]);
+  } catch(err){ showErr('ol-err', err.message); }
+  btn.disabled=false; btn.textContent='Save Observation Log';
+});
+async function loadObservationLogs() {
+  // Instructors only see their own observation logs
+  const { data } = await sb.from('notes').select('*').eq('instructor_id',ME.id).ilike('title','Observation Log%').order('created_at',{ascending:false});
+  const list = document.getElementById('ol-list');
+  list.innerHTML = data?.length ? data.map(n=>`
+    <div style="padding:0.9rem 0;border-bottom:1px solid rgba(201,165,154,0.1)">
+      <p style="font-family:var(--fd);font-size:1rem;font-weight:600;color:var(--ink)">${n.title}</p>
+      <p style="font-size:0.72rem;color:var(--muted-l);margin-top:0.2rem">${new Date(n.created_at).toLocaleDateString('en-KE',{day:'numeric',month:'long',year:'numeric'})}</p>
+    </div>`).join('') : '<p style="font-size:0.82rem;color:var(--muted)">No observation logs yet.</p>';
+  // Load feedback on obs log page
+  await loadObsFeedback();
+}
+
+async function loadObsFeedback(){
+  const { data } = await sb.from('instructor_feedback').select('*').eq('instructor_id',ME.id).order('created_at',{ascending:false});
+  if (!data?.length) return;
+  const section = document.getElementById('obs-feedback-section');
+  if (section) section.style.display = 'block';
+  const count = document.getElementById('obs-fb-count');
+  if (count) count.textContent = data.length;
+  const list = document.getElementById('obs-feedback-list');
+  if (list) list.innerHTML = data.map(f=>`
+    <div style="padding:0.9rem 0;border-bottom:1px solid rgba(201,165,154,0.12)">
+      <p style="font-size:0.82rem;color:var(--muted);margin-top:0.4rem;line-height:1.7;white-space:pre-wrap">${f.message||''}</p>
+      <p style="font-size:0.68rem;color:var(--muted-l);margin-top:0.4rem">${new Date(f.created_at).toLocaleDateString('en-KE',{day:'numeric',month:'long',year:'numeric'})}</p>
+    </div>`).join('');
+}
+
+// ── CLASS ATTENDANCE ──────────────────────────────────────────────
+document.getElementById('cl-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn=document.getElementById('cl-btn'); btn.disabled=true; btn.textContent='Saving…';
+  const fd=new FormData(e.target);
+  try {
+    const { error } = await sb.from('class_attendance').insert({
+      instructor_id: ME.id,
+      class_name: fd.get('class_name'),
+      class_date: fd.get('class_date'),
+      class_time: fd.get('class_time')||null,
+      attendees: parseInt(fd.get('attendees'),10)||0,
+      capacity: fd.get('capacity')?parseInt(fd.get('capacity'),10):null,
+      notes: fd.get('notes')||null,
+    });
+    if (error) throw error;
+    await ttComplete();
+    showAlert('cl-ok'); e.target.reset();
+    const cd2=document.querySelector('#cl-form input[name="class_date"]'); if(cd2) cd2.valueAsDate=new Date();
+    await loadClassLog();
+  } catch(err){ showErr('cl-err', err.message); }
+  btn.disabled=false; btn.textContent='Save Class';
+});
+async function loadClassLog(){
+  const { data } = await sb.from('class_attendance').select('*').eq('instructor_id',ME.id).order('class_date',{ascending:false}).limit(40);
+  const list = document.getElementById('cl-list'); if (!list) return;
+  list.innerHTML = data?.length ? data.map(c=>{
+    const cap = c.capacity?` / ${c.capacity}`:'';
+    return `<div style="display:flex;justify-content:space-between;padding:0.7rem 0;border-bottom:1px solid rgba(201,165,154,0.12);font-size:0.82rem">
+      <div><strong style="font-weight:600;font-family:var(--fd);font-size:1rem">${c.class_name}</strong>
+        <p style="font-size:0.7rem;color:var(--muted-l);margin-top:0.1rem">${new Date(c.class_date).toLocaleDateString('en-KE',{weekday:'short',day:'numeric',month:'short'})}${c.class_time?' · '+c.class_time.slice(0,5):''}</p></div>
+      <span style="font-family:var(--fd);font-size:1.2rem;color:var(--blush)">${c.attendees}${cap}</span>
+    </div>`;
+  }).join('') : '<p style="font-size:0.82rem;color:var(--muted)">No classes logged yet.</p>';
+}
+
+// ── SIGN OUT ──────────────────────────────────────────────────────
+window.signOut = async () => { await sb.auth.signOut(); window.location.href='/staff/login.html'; };
+
+// ── NAVIGATION ────────────────────────────────────────────────────
+window.goPage = (id) => {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const pg = document.getElementById('page-'+id);
+  if (pg) pg.classList.add('active');
+  document.querySelector(`.nav-item[onclick="goPage('${id}')"]`)?.classList.add('active');
+  document.getElementById('pg-title').textContent = PAGE_TITLES[id]||'Dashboard';
+  closeSB();
+  ttStart(id);
+  // Refresh messages page on visit and clear badge
+  if (id === 'messages') {
+    loadMessages().catch(()=>{});
+    const nb = document.getElementById('nb-messages');
+    if (nb) nb.style.display='none';
+  }
+};
+window.openSB  = () => { document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('open'); };
+window.closeSB = () => { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); };
+
+window.toggleNotifPanel = () => document.getElementById('notif-panel').classList.toggle('open');
+document.addEventListener('click', e => {
+  if (!e.target.closest('#notif-panel') && !e.target.closest('#notif-toggle')) document.getElementById('notif-panel').classList.remove('open');
+});
+
+// ── UTILS ─────────────────────────────────────────────────────────
+function showAlert(id){ const el=document.getElementById(id); if(!el) return; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),4000); }
+function showErr(id,msg){ const el=document.getElementById(id); if(!el) return; el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),5000); }
+function timeAgo(ts){ const d=Math.floor((Date.now()-new Date(ts))/1000); if(d<60) return 'Just now'; if(d<3600) return Math.floor(d/60)+'m ago'; if(d<86400) return Math.floor(d/3600)+'h ago'; return Math.floor(d/86400)+'d ago'; }
+
+// Show a floating toast banner with an optional click-to-navigate page target
+function showToastBanner(message, targetPage) {
+  const toast = document.createElement('div');
+  toast.style.cssText = [
+    'position:fixed','top:1.2rem','right:1.2rem','z-index:9999',
+    'background:var(--ink)','color:var(--parch)','padding:0.85rem 1.2rem',
+    'font-family:var(--fb)','font-size:0.82rem','letter-spacing:0.03em',
+    'border-left:3px solid #64333C','max-width:320px',
+    'box-shadow:0 6px 24px rgba(0,0,0,0.22)','cursor:pointer',
+    'opacity:0','transition:opacity 0.35s ease'
+  ].join(';');
+  toast.textContent = message;
+  if (targetPage) {
+    const hint = document.createElement('span');
+    hint.style.cssText = 'display:block;font-size:0.72rem;color:var(--blush);margin-top:0.25rem;letter-spacing:0.05em;text-transform:uppercase';
+    hint.textContent = 'Tap to view →';
+    toast.appendChild(hint);
+    toast.addEventListener('click', () => { goPage(targetPage); toast.remove(); });
+  }
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => { toast.style.opacity = '1'; });
+  setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 400); }, 5000);
+}
+
+// ── VIDEO MODAL + NOTES ───────────────────────────────────────────
+let _vmCurrentId = null;
+window.openVideoModal = async (videoId, path, bucket, title) => {
+  _vmCurrentId = videoId;
+  const m = document.getElementById('vmodal');
+  document.getElementById('vmodal-title').textContent = title || 'Video';
+  const vid = document.getElementById('vmodal-video');
+  const fb = document.getElementById('vmodal-fallback');
+  vid.style.display='block'; fb.style.display='none'; vid.removeAttribute('src'); vid.load();
+  m.classList.add('open'); document.body.style.overflow='hidden';
+  try {
+    const { data, error } = await sb.storage.from(bucket).createSignedUrl(path, 3600);
+    if (error) throw error;
+    vid.src = data.signedUrl;
+    vid.load();
+    vid.play().catch(()=>{});
+  } catch(err){
+    vid.style.display='none'; fb.style.display='block';
+    fb.innerHTML = 'Could not load video: '+(err.message||'unknown error');
+  }
+  await loadVideoNotes(videoId);
+};
+window.closeVideoModal = () => {
+  const m = document.getElementById('vmodal');
+  const vid = document.getElementById('vmodal-video');
+  vid.pause(); vid.removeAttribute('src'); vid.load();
+  m.classList.remove('open'); document.body.style.overflow=''; _vmCurrentId = null;
+};
+async function loadVideoNotes(videoId){
+  const list = document.getElementById('vmodal-notes-list');
+  const counter = document.getElementById('vmodal-nc');
+  list.innerHTML = '<p style="font-size:0.78rem;color:var(--muted);padding:0.6rem 0">Loading…</p>';
+  const { data, error } = await sb.from('video_notes')
+    .select('id, body, created_at, author_id, profiles:author_id(full_name)')
+    .eq('video_id', videoId).order('created_at',{ascending:false});
+  if (error){ list.innerHTML='<p style="font-size:0.78rem;color:var(--err);padding:0.6rem 0">Could not load notes.</p>'; return; }
+  counter.textContent = data.length;
+  if (!data.length){ list.innerHTML='<p style="font-size:0.78rem;color:var(--muted);padding:0.6rem 0">No notes yet. Be the first to comment.</p>'; return; }
+  list.innerHTML = data.map(n=>{
+    const canDel = n.author_id === ME.id;
+    const safe = (n.body||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return `<div class="vmodal-note">
+      <p class="vmodal-note-author">${n.profiles?.full_name||'Member'}</p>
+      <p class="vmodal-note-body">${safe}</p>
+      <div class="vmodal-note-meta">
+        <span>${new Date(n.created_at).toLocaleString('en-KE',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}</span>
+        ${canDel?`<button class="vmodal-note-del" onclick="deleteVideoNote('${n.id}')">Delete</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+window.deleteVideoNote = async (id) => {
+  if (!confirm('Delete this note?')) return;
+  await sb.from('video_notes').delete().eq('id', id);
+  if (_vmCurrentId) await loadVideoNotes(_vmCurrentId);
+};
+// ── VIDEO MARK DONE ────────────────────────────────────────────
+async function loadVideoDoneState(videoId){
+  const cb = document.getElementById('vmodal-done-cb');
+  const lbl = document.getElementById('vmodal-done-label');
+  if (!cb||!lbl) return;
+  try {
+    const { data:done } = await sb.from('module_completions')
+      .select('id').eq('instructor_id',ME.id)
+      .in('resource_type',['training_video','video','induction_week']).eq('resource_id',videoId).maybeSingle();
+    cb.checked = !!done;
+    lbl.classList.toggle('is-done', !!done);
+    lbl.childNodes[1].textContent = ' ' + (done ? 'Marked as done ✓' : 'Mark as done');
+  } catch(e) { /* silent */ }
+}
+window.toggleVideoDone = async (checked) => {
+  if (!_vmCurrentId) return;
+  if (checked) {
+    const { data:existing } = await sb.from('module_completions').select('id').eq('instructor_id',ME.id).eq('resource_id',_vmCurrentId).maybeSingle();
+    if (!existing) await sb.from('module_completions').insert({
+      instructor_id:ME.id, resource_type:'training_video', resource_id:_vmCurrentId
+    }).then(()=>{},()=>{});
+    const lbl = document.getElementById('vmodal-done-label');
+    if (lbl){ lbl.classList.add('is-done'); lbl.childNodes[1].textContent = ' Marked as done ✓'; }
+  } else {
+    await sb.from('module_completions').delete()
+      .eq('instructor_id',ME.id).in('resource_type',['training_video','video','induction_week']).eq('resource_id',_vmCurrentId);
+    const lbl = document.getElementById('vmodal-done-label');
+    if (lbl){ lbl.classList.remove('is-done'); lbl.childNodes[1].textContent = ' Mark as done'; }
+  }
+};
+
+document.getElementById('vmodal-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  if (!_vmCurrentId) return;
+  const ta = document.getElementById('vmodal-input');
+  const btn = document.getElementById('vmodal-btn');
+  const body = ta.value.trim(); if (!body) return;
+  btn.disabled=true; btn.textContent='Posting…';
+  const { error } = await sb.from('video_notes').insert({ video_id:_vmCurrentId, author_id:ME.id, body });
+  btn.disabled=false; btn.textContent='Post Note';
+  if (error){ alert('Could not post: '+error.message); return; }
+  ta.value=''; await loadVideoNotes(_vmCurrentId);
+});
+document.addEventListener('keydown', e => { if (e.key==='Escape' && document.getElementById('vmodal').classList.contains('open')) closeVideoModal(); });
+
+await init();
+
+// ── REALTIME SUBSCRIPTIONS ─────────────────────────────────────────
+// Auto-refresh Sondr Fundamentals when admin/owner uploads new content
+sb.channel('induction-changes')
+  .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'induction_weeks' }, async () => {
+    await loadInduction();
+    // Show a subtle banner if the user is on the induction page
+    const pg = document.getElementById('page-induction');
+    if (pg?.classList.contains('active')) {
+      const banner = document.createElement('div');
+      banner.className = 'alert alert-ok'; banner.style.cssText='display:flex;margin-bottom:0.8rem';
+      banner.textContent = '✓ New content available — refreshed automatically.';
+      pg.insertBefore(banner, pg.firstChild);
+      setTimeout(()=>banner.remove(), 4000);
+    }
+  })
+  .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'induction_weeks' }, async () => {
+    await loadInduction();
+  })
+  .subscribe();
+
+// Refresh notes panel when any user adds/removes a video note
+sb.channel('dash-vidnotes-changes')
+  .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'video_notes' }, async (payload) => {
+    if (_vmCurrentId && _vmCurrentId === payload?.new?.video_id) {
+      await loadVideoNotes(_vmCurrentId);
+    }
+  })
+  .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'video_notes' }, async () => {
+    if (_vmCurrentId) await loadVideoNotes(_vmCurrentId);
+  })
+  .subscribe();
+
+// Direct subscription on videos table — catches owner/admin uploads immediately
+// regardless of whether the notifications row is delivered first
+sb.channel('videos-changes')
+  .on('postgres_changes', {
+    event: 'INSERT', schema: 'public', table: 'videos',
+    filter: 'is_owner_upload=eq.true'
+  }, async (payload) => {
+    await loadTrainingVideos();
+    // Reload notification panel so the new upload shows there too
+    await loadNotifications();
+    const cat = payload?.new?.category || '';
+    const isFund = cat === 'fundamentals';
+    const title = payload?.new?.title || (isFund ? 'New Sondr Fundamentals content' : 'New training material');
+    showToastBanner(isFund ? `📚 ${title}` : `🎬 ${title}`, isFund ? 'induction' : 'training');
+    if (isFund) {
+      await loadInduction();
+      const b = document.getElementById('nb-induction');
+      b.textContent = (parseInt(b.textContent) || 0) + 1;
+      b.style.display = 'inline-block';
+    } else {
+      const b = document.getElementById('nb-videos');
+      b.textContent = (parseInt(b.textContent) || 0) + 1;
+      b.style.display = 'inline-block';
+    }
+  })
+  .subscribe();
+
+// Auto-refresh notifications when new ones arrive
+sb.channel('notif-changes')
+  .on('postgres_changes', {
+    event: 'INSERT', schema: 'public', table: 'notifications',
+    filter: `recipient_id=eq.${ME?.id}`
+  }, async (payload) => {
+    const newest = payload?.new;
+    const rt = newest?.resource_type || newest?.type || '';
+
+    // Always reload notification panel
+    await loadNotifications();
+
+    // Training video uploaded by admin/owner
+    if (rt === 'training_video' || rt === 'video' || rt === 'new_video') {
+      await loadTrainingVideos();
+      const msg = newest?.title || '🎬 New training material available';
+      showToastBanner(msg, 'training');
+    }
+
+    // Sondr Fundamentals content (video or worksheet)
+    if (rt === 'fundamentals_video' || rt === 'fundamentals_worksheet') {
+      await loadInduction();
+      const msg = newest?.title || '📚 New Sondr Fundamentals content available';
+      showToastBanner(msg, 'induction');
+    }
+
+    // Re-count all unread for badges
+    const { data: unreadAll } = await sb.from('notifications').select('resource_type,type,is_read').eq('recipient_id', ME.id).eq('is_read', false);
+    const vidN  = (unreadAll||[]).filter(n=>n.resource_type==='training_video'||n.resource_type==='video'||n.type==='new_video').length;
+    const fundN = (unreadAll||[]).filter(n=>n.resource_type==='fundamentals_video'||n.resource_type==='fundamentals_worksheet').length;
+    if (vidN  > 0){ const b=document.getElementById('nb-videos');   b.textContent=vidN;  b.style.display='inline-block'; }
+    if (fundN > 0){ const b=document.getElementById('nb-induction'); b.textContent=(parseInt(b.textContent)||0)+fundN; b.style.display='inline-block'; }
+  })
+  .subscribe();
+
+// Auto-reflect feedback from admin/owner immediately
+sb.channel('feedback-changes')
+  .on('postgres_changes', {
+    event: 'INSERT', schema: 'public', table: 'instructor_feedback',
+    filter: `instructor_id=eq.${ME?.id}`
+  }, async (payload) => {
+    await loadFeedback();
+    await loadMessages();
+    await loadObsFeedback();
+    // Reload notification panel so the bell badge reflects the new feedback notification
+    await loadNotifications();
+    // Show a visible toast banner so instructor immediately sees new feedback
+    const subject = payload?.new?.subject || 'New feedback from Gagan';
+    showToastBanner(`💬 ${subject}`, 'home');
+    // Update messages badge
+    const nb = document.getElementById('nb-messages');
+    if (nb){ const cur = parseInt(nb.textContent)||0; nb.textContent=cur+1; nb.style.display='inline-block'; }
+    // Also highlight the feedback card on the home page
+    const fbCard = document.getElementById('feedback-home');
+    if (fbCard) {
+      fbCard.style.transition = 'box-shadow 0.4s ease';
+      fbCard.style.boxShadow = '0 0 0 2px var(--blush)';
+      setTimeout(() => { fbCard.style.boxShadow = ''; }, 3500);
+    }
+  })
+  .subscribe();
+
+// ── DAILY CHECK-IN TABS ────────────────────────────────────────────
+window.switchCITab = (tab) => {
+  document.getElementById('ci-panel-accountability').style.display = tab==='accountability' ? '' : 'none';
+  document.getElementById('ci-panel-glance').style.display = tab==='glance' ? '' : 'none';
+  document.querySelectorAll('.ci-tab').forEach(t => {
+    const isActive = t.id === 'ci-tab-'+tab;
+    t.style.borderBottomColor = isActive ? (tab==='accountability'?'#4CAF82':'var(--blush)') : 'transparent';
+    t.style.color = isActive ? (tab==='accountability'?'#4CAF82':'var(--blush)') : 'var(--muted)';
+  });
+};
+
+// ── DAILY TASK CAP (2 tasks per day) ──────────────────────────────
+async function checkDailyTaskCap() {
+  const today = new Date().toISOString().slice(0,10);
+  const counter = document.getElementById('ci-task-counter');
+  const cappedMsg = document.getElementById('ci-capped-msg');
+  try {
+    const { data: logs, error } = await sb.from('task_time_logs')
+      .select('id')
+      .eq('user_id', ME.id)
+      .eq('completed', true)
+      .gte('created_at', today + 'T00:00:00')
+      .lte('created_at', today + 'T23:59:59');
+    if (error) throw error;
+    const count = (logs||[]).length;
+    if (counter) counter.textContent = `${count}/2 tasks completed today`;
+    if (count >= 2) {
+      if (cappedMsg) cappedMsg.style.display = 'flex';
+      document.getElementById('ci-btn') && (document.getElementById('ci-btn').disabled = true);
+    }
+  } catch(e) {
+    // task_time_logs table may not exist — show a safe fallback
+    if (counter) counter.textContent = 'Check-in open';
+  }
+}
+
+// ── WEEKLY CHECK-IN FORM ──────────────────────────────────────────
+document.getElementById('wci-form')?.addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = document.getElementById('wci-btn'); btn.disabled=true; btn.textContent='Submitting…';
+  const fd = new FormData(e.target);
+  try {
+    const { error } = await sb.from('notes').insert({
+      instructor_id: ME.id,
+      title: `Weekly Check-In — w/e ${fd.get('week_ending')}`,
+      content: `CLASSES OBSERVED:\n${fd.get('classes_observed')}\n\nPERSONAL PRACTICE & PREPARATION:\n${fd.get('personal_practice')}\n\nTEACHING REFLECTION — What went well:\n${fd.get('reflection_well')}\n\nTEACHING REFLECTION — Working to improve:\n${fd.get('reflection_improve')}\n\nCLIENT FEEDBACK / ISSUES:\n${fd.get('client_feedback')}\n\nTRAINING & DEVELOPMENT:\n${fd.get('training_dev')||'None'}\n\nSUPPORT NEEDED:\n${fd.get('support_needed')||'None'}`,
+      is_private: false,
+    });
+    if (error) throw error;
+    await notifyStaff(
+      'weekly_checkin',
+      `✅ Weekly Check-In — ${PROFILE?.full_name||'Instructor'}`,
+      `w/e ${fd.get('week_ending')} · ${(fd.get('reflection_well')||'Submitted').slice(0,100)}`,
+      'weekly_checkin'
+    );
+    await ttComplete();
+    showAlert('wci-ok'); e.target.reset();
+    document.getElementById('wci-date') && (document.getElementById('wci-date').valueAsDate = new Date());
+    await loadWeeklyCheckins();
+  } catch(err){ showErr('wci-err', err.message); }
+  btn.disabled=false; btn.textContent='Submit Weekly Check-In';
+});
+async function loadWeeklyCheckins() {
+  const { data } = await sb.from('notes').select('*').eq('instructor_id',ME.id).ilike('title','Weekly Check-In%').order('created_at',{ascending:false});
+  const list = document.getElementById('wci-list');
+  if (!list) return;
+  list.innerHTML = data?.length ? data.map(n=>`
+    <div style="padding:0.9rem 0;border-bottom:1px solid rgba(201,165,154,0.1)">
+      <p style="font-family:var(--fd);font-size:1rem;font-weight:600;color:var(--ink)">${n.title}</p>
+      <p style="font-size:0.72rem;color:var(--muted-l);margin-top:0.2rem">${new Date(n.created_at).toLocaleDateString('en-KE',{day:'numeric',month:'long',year:'numeric'})}</p>
+    </div>`).join('') : '<p style="font-size:0.82rem;color:var(--muted)">No check-ins submitted yet.</p>';
+}
+
+// ── SELF-PRACTICE MULTI-CLIP UPLOAD ──────────────────────────────
+window.addSPSlot = () => {
+  _spSlotCount++;
+  const n = _spSlotCount;
+  const wrap = document.getElementById('sp-video-slots');
+  const div = document.createElement('div');
+  div.id = 'sp-slot-'+n;
+  div.style.cssText = 'background:var(--parch);border:1px dashed rgba(201,165,154,0.35);padding:1rem;position:relative';
+  div.innerHTML = `
+    <button type="button" onclick="document.getElementById('sp-slot-${n}').remove()" style="position:absolute;top:0.5rem;right:0.6rem;background:none;border:none;font-size:1rem;color:var(--muted-l);cursor:pointer;line-height:1">×</button>
+    <p style="font-size:0.6rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem;font-weight:500">Clip ${n}</p>
+    <div class="field-row" style="margin-bottom:0.5rem"><label>Clip Title</label><input type="text" id="sp-title-${n}" placeholder="e.g. Footwork transition, cueing practice…"/></div>
+    <div class="field-row" style="margin-bottom:0"><label>Video File <span style="font-style:italic;font-size:0.7em">(max 500MB · MP4, MOV)</span></label><input type="file" id="sp-file-${n}" accept="video/*"/></div>
+    <div class="upload-progress" id="sp-prog-${n}" style="display:none"><div class="upload-bar"><div class="upload-fill" id="sp-fill-${n}"></div></div><p class="upload-label" id="sp-lbl-${n}"></p></div>`;
+  wrap.appendChild(div);
+};
+// Auto-add the first slot after the function is defined
+window.addSPSlot();
+
+window.uploadSPClips = async () => {
+  const btn = document.getElementById('sp-clips-btn'); btn.disabled=true; btn.textContent='Uploading…';
+  const slots = document.querySelectorAll('[id^="sp-slot-"]');
+  if (!slots.length){ showErr('sp-clips-err','Add at least one clip first.'); btn.disabled=false; btn.textContent='Upload Clips'; return; }
+  let uploaded = 0;
+  try {
+    for (const slot of slots) {
+      const n = slot.id.replace('sp-slot-','');
+      const file = document.getElementById('sp-file-'+n)?.files[0];
+      if (!file) continue;
+      const title = document.getElementById('sp-title-'+n)?.value?.trim() || `Self-Practice Clip`;
+      const prog = document.getElementById('sp-prog-'+n); const fill = document.getElementById('sp-fill-'+n); const lbl = document.getElementById('sp-lbl-'+n);
+      if (prog) prog.style.display='block'; if (fill) fill.style.width='2%'; if (lbl) lbl.textContent='Starting…';
+      const ext = file.name.split('.').pop();
+      const path = `${ME.id}/${Date.now()}_clip${n}.${ext}`;
+      await fastUpload('instructor-videos', path, file, pct => {
+        if (fill) fill.style.width=pct+'%';
+        if (lbl) lbl.textContent = pct<100 ? `Uploading… ${pct}%` : 'Finalising…';
+      });
+      if (fill) fill.style.width='95%'; if (lbl) lbl.textContent='Saving…';
+      const { error: dbErr } = await sb.from('videos').insert({
+        instructor_id:ME.id, title, category:'self_practice',
+        description:`Self-practice clip uploaded ${new Date().toLocaleDateString('en-KE',{day:'numeric',month:'short',year:'numeric'})}`,
+        storage_path:path, file_size:file.size, is_owner_upload:false
+      });
+      if (dbErr) throw new Error(`${title}: ${dbErr.message}`);
+      if (fill) fill.style.width='100%'; if (lbl) lbl.textContent='Saved ✓';
+      uploaded++;
+    }
+    if (!uploaded){ showErr('sp-clips-err','Please select a video file for at least one clip.'); btn.disabled=false; btn.textContent='Upload Clips'; return; }
+    showAlert('sp-clips-ok');
+    // Clear all slots and add one fresh one
+    document.getElementById('sp-video-slots').innerHTML = '';
+    _spSlotCount = 0;
+    window.addSPSlot();
+    await loadSPClips();
+    await loadMyVideos();
+  } catch(err){ showErr('sp-clips-err', err.message||'Upload failed.'); }
+  btn.disabled=false; btn.textContent='Upload Clips';
+};
+
+// Load self-practice clips for instructor's own view
+async function loadSPClips() {
+  const { data } = await sb.from('videos').select('*').eq('instructor_id',ME.id)
+    .eq('category','self_practice').order('uploaded_at',{ascending:false}).limit(30);
+  const card = document.getElementById('sp-clips-saved-card');
+  const list = document.getElementById('sp-clips-list');
+  const count = document.getElementById('sp-clips-count');
+  if (!card||!list) return;
+  if (!data?.length){
+    card.style.display='none'; return;
+  }
+  card.style.display='';
+  if (count) count.textContent = data.length + (data.length===1?' clip':' clips');
+  list.innerHTML = data.map(v=>`
+    <div style="display:flex;align-items:center;gap:0.9rem;padding:0.8rem;background:var(--parch);border:1px solid rgba(201,165,154,0.15);margin-bottom:0.5rem">
+      <div style="width:38px;height:38px;background:var(--ink);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer" onclick="openVideoModal('${v.id}','${v.storage_path}','instructor-videos','${(v.title||'').replace(/'/g,"\\'")}')" title="Play clip">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="rgba(237,224,212,0.7)" stroke-width="1.5"><path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <div style="flex:1;min-width:0">
+        <p style="font-size:0.88rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${v.title}</p>
+        <p style="font-size:0.68rem;color:var(--muted-l);margin-top:0.1rem">${new Date(v.uploaded_at).toLocaleDateString('en-KE',{day:'numeric',month:'short',year:'numeric'})}</p>
+      </div>
+      <span style="font-size:0.54rem;letter-spacing:0.14em;text-transform:uppercase;background:rgba(184,150,12,0.1);color:var(--gold);padding:0.18rem 0.45rem;white-space:nowrap">Practice</span>
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ok)" stroke-width="2" title="Saved" style="flex-shrink:0"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    </div>`).join('');
+}
+
+// ── MY ASSIGNMENTS (instructor self-upload) ───────────────────────
+async function loadMyAssignments(){
+  const list = document.getElementById('my-assignments-list');
+  const { data } = await sb.from('videos').select('*, profiles(full_name)')
+    .eq('instructor_id', ME.id).eq('category','assignment').eq('is_owner_upload',false)
+    .order('uploaded_at',{ascending:false});
+  if (!data?.length){ list.innerHTML='<p style="font-size:0.82rem;color:var(--muted)">No assignments submitted yet.</p>'; return; }
+  list.innerHTML = data.map(v=>{
+    const titleSafe=(v.title||'').replace(/'/g,"\\'");
+    const isDoc = /\.(pdf|doc|docx|ppt|pptx|xls|xlsx)$/i.test(v.storage_path||'');
+    const bucket = isDoc ? 'training-materials' : 'instructor-videos';
+    const dateStr = new Date(v.uploaded_at).toLocaleDateString('en-KE',{day:'numeric',month:'short',year:'numeric'});
+    return `<div style="border:1px solid rgba(201,165,154,0.18);padding:1rem 1.1rem;margin-bottom:0.8rem;background:var(--white)">
+      <div style="display:flex;align-items:center;gap:0.55rem;margin-bottom:0.2rem">
+        ${isDoc
+          ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ddb9ab" stroke-width="1.5"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>`
+          : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ddb9ab" stroke-width="1.5"><path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`}
+        <p style="font-family:var(--fd);font-size:1rem;color:var(--ink);font-weight:600">${v.title}</p>
+      </div>
+      <p style="font-size:0.7rem;color:var(--muted-l)">${isDoc?'Document':'Video'} · ${dateStr}</p>
+      <button class="btn-ghost" style="margin-top:0.6rem;padding:0.4rem 0.8rem;font-size:0.58rem"
+        onclick="${isDoc?`openDocModal('${v.id}','${v.storage_path}','${bucket}','${titleSafe}')`:`openVideoModal('${v.id}','${v.storage_path}','${bucket}','${titleSafe}')`}">
+        ${isDoc?'📄 Open &amp; Notes':'▶ Watch'}
+      </button>
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('instructor-assign-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn=document.getElementById('ia-btn'); btn.disabled=true; btn.textContent='Uploading…';
+  const errEl=document.getElementById('ia-err'); errEl.classList.remove('show');
+  const fd=new FormData(e.target);
+  const file=fd.get('file'), type=fd.get('type'), title=(fd.get('title')||'').trim();
+  if (!file||file.size===0){ errEl.textContent='Please select a file.'; errEl.classList.add('show'); btn.disabled=false; btn.textContent='Upload Assignment'; return; }
+  const prog=document.getElementById('ia-progress'),fill=document.getElementById('ia-fill'),lbl=document.getElementById('ia-label');
+  prog.style.display='block'; fill.style.width='2%'; lbl.textContent='Uploading… 0%';
+  try {
+    const safeName=`${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;
+    const isDoc = type==='document';
+    const bucket = isDoc ? 'training-materials' : 'instructor-videos';
+    const path = `assignments/${ME.id}/${safeName}`;
+    await fastUpload(bucket, path, file, pct=>{ fill.style.width=Math.max(2,Math.min(80,pct*0.8))+'%'; lbl.textContent=`Uploading… ${pct}%`; });
+    fill.style.width='88%'; lbl.textContent='Saving…';
+    const { data:newVid, error:dbErr } = await sb.from('videos').insert({
+      instructor_id:ME.id, title, category:'assignment',
+      description:(fd.get('description')||'').trim()||null,
+      storage_path:path, file_size:file.size, is_owner_upload:false
+    }).select().single();
+    if (dbErr) throw dbErr;
+    fill.style.width='94%'; lbl.textContent='Notifying management…';
+    const { data:mgmt } = await sb.from('profiles').select('id').in('role',['owner','admin']);
+    if (mgmt?.length){
+      await sb.from('notifications').insert(mgmt.map(p=>({
+        recipient_id:p.id, sender_id:ME.id, type:'assignment',
+        title:'📋 New Assignment Submitted',
+        message:`${ME.full_name||'An instructor'} submitted: "${title}"`,
+        resource_type:'assignment', resource_id:newVid?.id,
+        storage_path:path, storage_bucket:bucket
+      })));
+    }
+    fill.style.width='100%'; lbl.textContent='Done!';
+    setTimeout(()=>{ prog.style.display='none'; fill.style.width='0'; },1200);
+    showAlert('ia-ok'); e.target.reset();
+    document.getElementById('ia-file').accept='video/*';
+    await loadMyAssignments();
+  } catch(err){
+    console.error(err);
+    errEl.textContent=err.message||'Upload failed.'; errEl.classList.add('show');
+    prog.style.display='none';
+  }
+  btn.disabled=false; btn.textContent='Upload Assignment';
+});
+
+// ── DOCUMENT MODAL ────────────────────────────────────────────────
+let _docCurrentId=null, _docCurrentPath=null, _docCurrentBucket=null;
+window.openDocModal = async (docId, path, bucket, title) => {
+  _docCurrentId=docId; _docCurrentPath=path; _docCurrentBucket=bucket;
+  document.getElementById('docmodal-title').textContent=title||'Document';
+  document.getElementById('docmodal-filename').textContent=title||path.split('/').pop();
+  document.getElementById('docmodal').classList.add('open');
+  document.body.style.overflow='hidden';
+  await loadDocNotes(docId);
+};
+window.closeDocModal = () => {
+  document.getElementById('docmodal').classList.remove('open');
+  document.body.style.overflow='';
+  _docCurrentId=null; _docCurrentPath=null; _docCurrentBucket=null;
+};
+window.openCurrentDoc = async () => {
+  if (!_docCurrentPath||!_docCurrentBucket) return;
+  const { data, error } = await sb.storage.from(_docCurrentBucket).createSignedUrl(_docCurrentPath, 3600);
+  if (error){ alert('Could not open file: '+error.message); return; }
+  window.open(data.signedUrl,'_blank');
+};
+async function loadDocNotes(docId){
+  const list=document.getElementById('docmodal-notes-list');
+  const counter=document.getElementById('docmodal-nc');
+  list.innerHTML='<p style="font-size:0.78rem;color:var(--muted);padding:0.6rem 0">Loading…</p>';
+  const { data, error } = await sb.from('video_notes')
+    .select('id,body,created_at,author_id,profiles:author_id(full_name)')
+    .eq('video_id',docId).order('created_at',{ascending:false});
+  if (error){ list.innerHTML='<p style="font-size:0.78rem;color:var(--err);padding:0.6rem 0">Could not load notes.</p>'; return; }
+  counter.textContent=data.length;
+  if (!data.length){ list.innerHTML='<p style="font-size:0.78rem;color:var(--muted);padding:0.6rem 0">No notes yet. Be the first to add one.</p>'; return; }
+  list.innerHTML=data.map(n=>{
+    const safe=(n.body||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return `<div class="vmodal-note">
+      <p class="vmodal-note-author">${n.profiles?.full_name||'Member'}</p>
+      <p class="vmodal-note-body">${safe}</p>
+      <div class="vmodal-note-meta">
+        <span>${new Date(n.created_at).toLocaleString('en-KE',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+window.deleteDocNote = async (id) => {
+  if (!confirm('Delete this note?')) return;
+  await sb.from('video_notes').delete().eq('id',id);
+  if (_docCurrentId) await loadDocNotes(_docCurrentId);
+};
+document.getElementById('docmodal-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  if (!_docCurrentId) return;
+  const ta=document.getElementById('docmodal-input');
+  const btn=document.getElementById('docmodal-btn');
+  const body=ta.value.trim(); if (!body) return;
+  btn.disabled=true; btn.textContent='Posting…';
+  const { error } = await sb.from('video_notes').insert({ video_id:_docCurrentId, author_id:ME.id, body });
+  btn.disabled=false; btn.textContent='Post Note';
+  if (error){ alert('Could not post: '+error.message); return; }
+  ta.value=''; await loadDocNotes(_docCurrentId);
+});
+document.addEventListener('keydown', e => { if (e.key==='Escape' && document.getElementById('docmodal')?.classList.contains('open')) closeDocModal(); });
+
+// ── REALTIME: live feedback & broadcast pop-ups ───────────────────
+// Runs after init() so ME is defined. Subscribe once.
+function startNotifRealtime() {
+  if (!ME?.id) return;
+  sb.channel('instructor-notifs-'+ME.id)
+    .on('postgres_changes', {
+      event:'INSERT', schema:'public', table:'notifications',
+      filter:`recipient_id=eq.${ME.id}`
+    }, payload => {
+      const n = payload?.new; if (!n) return;
+      const ntype = n.type || n.resource_type || '';
+      // Show dot
+      document.getElementById('notif-dot').style.display = 'block';
+      // Refresh list
+      loadNotifications().catch(()=>{});
+      // Show appropriate modal immediately and refresh Messages page
+      if (ntype === 'feedback') {
+        showFbModal(n.message||'', n.title||'New Feedback', n.created_at, n.id);
+        loadMessages().catch(()=>{});
+        const nb = document.getElementById('nb-messages');
+        if (nb){ const cur = parseInt(nb.textContent)||0; nb.textContent=cur+1; nb.style.display='inline-block'; }
+      } else if (ntype === 'broadcast') {
+        showBCModal(n.title||'Message from Sondr', n.message||'', n.created_at, n.id);
+        loadMessages().catch(()=>{});
+        const nb = document.getElementById('nb-messages');
+        if (nb){ const cur = parseInt(nb.textContent)||0; nb.textContent=cur+1; nb.style.display='inline-block'; }
+      } else if (['training_document','new_worksheet','assignment','training_video','new_video','video'].includes(ntype)) {
+        const icon = ntype==='training_document'||ntype==='new_worksheet' ? '📄' : ntype==='assignment' ? '📋' : '🎬';
+        _shownBanners.add(n.id);
+        showContentBanner(icon, n.title||'New Content', n.message||'', () => goToNotif(n));
+        loadTrainingVideos().catch(()=>{});
+        if (ntype==='assignment') loadMyAssignments().catch(()=>{});
+      }
+    })
+    .subscribe();
+}
+</script>
+
+<!-- Document Viewer + Notes Modal -->
+<div id="docmodal" class="vmodal" onclick="if(event.target===this)closeDocModal()">
+  <div class="vmodal-box">
+    <button class="vmodal-x" onclick="closeDocModal()" aria-label="Close">×</button>
+    <div class="vmodal-head">
+      <p class="vmodal-title" id="docmodal-title">Document</p>
+    </div>
+    <div class="vmodal-body">
+      <div class="vmodal-player" style="position:relative;background:var(--parch);flex-direction:column;gap:1.2rem;padding:2.5rem;align-items:center;justify-content:center;">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#ddb9ab" stroke-width="1.2" style="flex-shrink:0">
+          <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        <p id="docmodal-filename" style="font-family:var(--fd);font-size:1.05rem;color:var(--ink);text-align:center;max-width:320px;line-height:1.5;margin:0"></p>
+        <button class="btn-ink" id="docmodal-open-btn" onclick="openCurrentDoc()" style="margin-top:0.5rem">Open / Download Document</button>
+      </div>
+      <div class="vmodal-notes">
+        <p class="vmodal-notes-title">Notes <span id="docmodal-nc" class="vmodal-nc">0</span></p>
+        <div id="docmodal-notes-list" class="vmodal-notes-list"></div>
+        <form id="docmodal-form" class="vmodal-form">
+          <textarea id="docmodal-input" placeholder="Add a note about this document…" rows="3" required></textarea>
+          <button type="submit" class="btn-ink" id="docmodal-btn">Post Note</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Video Player + Notes Modal -->
+<div id="vmodal" class="vmodal" onclick="if(event.target===this)closeVideoModal()">
+  <div class="vmodal-box">
+    <button class="vmodal-x" onclick="closeVideoModal()" aria-label="Close">×</button>
+    <div class="vmodal-head">
+      <p class="vmodal-title" id="vmodal-title">Video</p>
+    </div>
+    <div class="vmodal-body">
+      <div class="vmodal-player" style="position:relative;">
+        <video id="vmodal-video" controls preload="metadata" playsinline controlsList="nodownload" disablePictureInPicture></video>
+        <!-- Sondr Studio watermark — centered and always visible -->
+        <div class="sondr-watermark">sondr.STUDIO</div>
+        <!-- Shield blocks right-click -->
+        <div style="position:absolute;inset:0;z-index:9;" oncontextmenu="return false;"></div>
+        <div id="vmodal-fallback"></div>
+      </div>
+      <div class="vmodal-notes">
+        <p class="vmodal-notes-title">Notes <span id="vmodal-nc" class="vmodal-nc">0</span></p>
+        <div id="vmodal-notes-list" class="vmodal-notes-list"></div>
+        <form id="vmodal-form" class="vmodal-form">
+          <textarea id="vmodal-input" placeholder="Add a note about this video…" rows="3" required></textarea>
+          <button type="submit" class="btn-ink" id="vmodal-btn">Post Note</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
