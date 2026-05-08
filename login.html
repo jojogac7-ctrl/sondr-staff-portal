@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <title>Staff Portal — sondr.STUDIO</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Bodoni+Moda:ital,opsz,wght@1,6,900&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --blush:#ddb9ab;
+      --blush-l:#C8ADAA;
+      --blush-p:#F0DEDA;
+      --cream:#F1F0EA;
+      --parch:#F8F6F1;
+      --white:#FDFDFA;
+      --ink:#1C1312;
+      --muted:#4A3430;
+      --muted-l:#B5A291;
+      --burgundy:#64333C;
+      --ok:#4CAF82;
+      --err:#C94040;
+      --fd:'Playfair Display',serif;
+      --fb:'DM Sans',sans-serif;
+      --ease:cubic-bezier(0.22,1,0.36,1);
+    }
+    html{-webkit-font-smoothing:antialiased}
+    body{
+      font-family:var(--fb);font-weight:500;font-size:15.5px;line-height:1.6;
+      background:var(--parch);color:var(--ink);
+      min-height:100vh;display:flex;
+      align-items:center;justify-content:center;
+      padding:1.5rem;position:relative;overflow:hidden;
+    }
+
+    /* Brand-toned background blobs */
+    body::before{
+      content:'';position:fixed;inset:0;
+      background:
+        radial-gradient(ellipse 65% 55% at 10% 15%, rgba(221,185,171,0.22) 0%, transparent 65%),
+        radial-gradient(ellipse 55% 65% at 90% 85%, rgba(200,173,170,0.18) 0%, transparent 65%),
+        radial-gradient(ellipse 45% 45% at 55% 45%, rgba(100,51,60,0.04) 0%, transparent 55%);
+      pointer-events:none;
+    }
+
+    /* Large watermark in brand burgundy */
+    body::after{
+      content:'sondr.';position:fixed;
+      font-family:var(--fd);font-size:28vw;
+      color:rgba(100,51,60,0.05);
+      left:50%;top:50%;transform:translate(-50%,-50%);
+      pointer-events:none;white-space:nowrap;user-select:none;
+    }
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* ── CARD ── */
+    .card{
+      background:rgba(253,253,250,0.92);
+      border:1px solid rgba(100,51,60,0.11);
+      box-shadow:
+        0 2px 0 rgba(100,51,60,0.05),
+        0 10px 52px rgba(100,51,60,0.09),
+        0 2px 8px rgba(100,51,60,0.04);
+      backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+      padding:clamp(2.2rem,5vw,3.8rem);
+      width:100%;max-width:420px;
+      animation:fadeUp 0.7s var(--ease) both;
+      position:relative;z-index:1;
+    }
+    /* Thin gradient top-border accent */
+    .card::before{
+      content:'';position:absolute;
+      top:0;left:0;right:0;height:2px;
+      background:linear-gradient(90deg,#ddb9ab 0%,#64333C 50%,#C8ADAA 100%);
+    }
+
+    /* ── LOGO ── */
+    .logo{display:flex;align-items:center;gap:0.65rem;line-height:1}
+    .logo-mark{flex-shrink:0;display:block}
+    .logo-text{font-family:var(--fd);font-size:1.7rem;font-weight:300;color:#ddb9ab;letter-spacing:0.01em;line-height:1}
+    .logo-text em{font-family:var(--fb);font-style:normal;font-size:0.62rem;letter-spacing:0.24em;text-transform:uppercase;vertical-align:2px;margin-left:1px;color:#ddb9ab;font-weight:400;opacity:0.85;display:inline}
+    .subtitle{
+      font-size:0.58rem;letter-spacing:0.24em;text-transform:uppercase;
+      color:var(--burgundy);margin:0.45rem 0 2.2rem;opacity:0.72;
+    }
+
+    /* ── TABS ── */
+    .tabs{
+      display:flex;margin-bottom:1.8rem;
+      border-bottom:1px solid rgba(100,51,60,0.11);
+    }
+    .tab{
+      flex:1;font-family:var(--fb);font-size:0.62rem;letter-spacing:0.16em;
+      text-transform:uppercase;font-weight:500;padding:0.65rem;
+      background:none;border:none;color:rgba(28,19,18,0.55);cursor:pointer;
+      border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.3s;
+    }
+    .tab:hover:not(.active){color:var(--muted)}
+    .tab.active{color:var(--burgundy);border-bottom-color:var(--burgundy)}
+    .panel{display:none}.panel.active{display:block}
+
+    /* ── FORM FIELDS ── */
+    .field{margin-bottom:1.3rem}
+    .field label{
+      display:block;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;
+      color:var(--muted);margin-bottom:0.5rem;font-weight:500;
+    }
+    .field input{
+      width:100%;padding:0.85rem 1rem;
+      background:rgba(248,246,241,0.75);
+      border:1px solid rgba(100,51,60,0.15);
+      color:var(--ink);font-family:var(--fb);font-weight:400;font-size:0.92rem;
+      outline:none;border-radius:0;
+      transition:border-color 0.3s,box-shadow 0.3s,background 0.3s;
+      -webkit-appearance:none;
+    }
+    .field input:focus{
+      border-color:var(--burgundy);
+      box-shadow:0 0 0 3px rgba(100,51,60,0.08);
+      background:rgba(253,253,250,0.95);
+    }
+    .field input::placeholder{color:rgba(74,52,48,0.28)}
+
+    /* Password wrapper */
+    .pw-wrap{position:relative}
+    .pw-wrap input{padding-right:3rem}
+    .pw-toggle{
+      position:absolute;right:0.85rem;top:50%;transform:translateY(-50%);
+      background:none;border:none;cursor:pointer;
+      color:rgba(74,52,48,0.28);transition:color 0.3s;
+      padding:0.2rem;display:flex;align-items:center;
+    }
+    .pw-toggle:hover{color:var(--burgundy)}
+    .pw-toggle svg{width:16px;height:16px;stroke:currentColor;fill:none}
+
+    /* ── ALERTS ── */
+    .alert{
+      padding:0.8rem 1rem;font-size:0.8rem;margin-bottom:1.3rem;
+      display:none;line-height:1.6;
+    }
+    .alert.err{
+      background:rgba(201,64,64,0.07);
+      border:1px solid rgba(201,64,64,0.18);
+      border-left:3px solid var(--err);
+      color:#7A1E1E;
+    }
+    .alert.ok{
+      background:rgba(76,175,130,0.07);
+      border:1px solid rgba(76,175,130,0.2);
+      border-left:3px solid var(--ok);
+      color:#1E5E3A;
+    }
+
+    /* ── BUTTON ── */
+    .btn{
+      width:100%;padding:0.92rem;
+      background:var(--burgundy);color:var(--white);
+      font-family:var(--fb);font-size:0.65rem;letter-spacing:0.22em;
+      text-transform:uppercase;font-weight:500;border:none;cursor:pointer;
+      transition:background 0.3s var(--ease),transform 0.15s;
+      margin-top:0.4rem;
+      display:flex;align-items:center;justify-content:center;gap:0.55rem;
+    }
+    .btn:hover:not(:disabled){background:#8B4A54}
+    .btn:active:not(:disabled){transform:translateY(1px)}
+    .btn:disabled{opacity:0.45;cursor:not-allowed}
+    .spinner{
+      width:14px;height:14px;
+      border:2px solid rgba(253,253,250,0.25);
+      border-top-color:var(--white);border-radius:50%;
+      animation:spin 0.7s linear infinite;display:none;flex-shrink:0;
+    }
+
+    /* ── BACK LINK ── */
+    .back{
+      display:block;text-align:center;font-size:0.65rem;
+      color:rgba(28,19,18,0.5);margin-top:2rem;
+      transition:color 0.3s;letter-spacing:0.1em;text-decoration:none;
+    }
+    .back:hover{color:var(--burgundy)}
+
+    /* Rate limit warning */
+    .attempts{
+      font-size:0.7rem;color:#7A1E1E;text-align:right;
+      margin-top:0.35rem;display:none;line-height:1.4;
+    }
+
+    /* Reset hint text */
+    .reset-hint{font-size:0.83rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.8}
+
+    @media(max-width:480px){.card{padding:2rem 1.4rem}}
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">
+    <svg width="26" height="40" viewBox="79 59 407 628" xmlns="http://www.w3.org/2000/svg" style="display:block;flex-shrink:0">
+      <path fill="#ddb9ab" fill-rule="evenodd" d="M 281.6668 74.0653 C 178.5618 74.0653 94.6788 157.9473 94.6788 261.0533 L 94.6788 483.1733 C 94.6788 586.2793 178.5618 670.1613 281.6668 670.1613 C 384.7718 670.1613 468.6548 586.2793 468.6548 483.1733 L 468.6548 261.0533 C 468.6548 157.9473 384.7718 74.0653 281.6668 74.0653 M 281.6668 683.1743 C 171.3868 683.1743 81.6668 593.4543 81.6668 483.1733 L 81.6668 261.0533 C 81.6668 150.7733 171.3868 61.0533 281.6668 61.0533 C 391.9468 61.0533 481.6668 150.7733 481.6668 261.0533 L 481.6668 483.1733 C 481.6668 593.4543 391.9468 683.1743 281.6668 683.1743"/>
+      <path fill="#ddb9ab" fill-rule="evenodd" d="M 215.0394 357.5759 C 214.4424 338.4699 231.6444 326.9019 254.5314 323.5149 C 295.5964 341.0929 344.6494 351.9019 344.6494 384.3369 C 344.6494 395.9539 338.0014 413.6079 312.2574 420.0909 C 269.7934 402.4439 216.3214 394.2169 215.0394 357.5759 M 319.4654 423.2359 C 345.3014 416.4339 364.2274 399.5969 363.7724 369.1599 C 362.5574 292.3659 217.1634 309.6669 215.0394 248.9599 C 214.2564 223.9249 243.9744 211.8749 277.0674 214.1829 C 277.0674 214.1829 320.1664 215.3409 359.2814 241.7999 L 356.4874 214.3569 C 356.4874 214.3569 317.3314 207.6789 276.6574 208.8929 C 210.7894 210.7149 199.2554 248.9599 199.5594 265.3499 C 200.0374 293.4399 222.6414 309.2409 249.8674 321.4719 C 207.5154 331.1829 199.3024 360.1079 199.5594 373.9659 C 200.7734 445.2969 344.6494 437.4049 344.6494 492.9529 C 344.6494 507.2179 334.6324 530.5909 291.5304 531.1979 C 286.6614 531.2669 281.7754 531.0589 276.9244 530.5529 L 276.9214 530.5599 C 276.9214 530.5599 276.6144 530.5309 276.0484 530.4659 C 272.6454 530.0839 269.2424 529.6349 265.9224 528.8209 C 246.7054 524.1079 226.2264 515.5319 203.0184 490.5239 L 205.6294 520.8779 C 227.7884 528.4669 244.4814 536.0549 291.5304 535.4479 C 330.3824 534.8399 364.3794 518.4489 363.7724 477.7759 C 363.3334 449.9999 344.0274 434.5359 319.4654 423.2359"/>
+    </svg>
+    <span class="logo-text">sondr.<em>STUDIO</em></span>
+  </div>
+  <p class="subtitle">Staff Portal · Secure Access</p>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('login')">Sign In</button>
+    <button class="tab" onclick="showTab('reset')">Reset Password</button>
+  </div>
+
+  <!-- SIGN IN PANEL -->
+  <div class="panel active" id="panel-login">
+    <div class="alert err" id="login-err"></div>
+    <form id="login-form" autocomplete="on">
+      <div class="field">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="your@email.com" required autocomplete="email"/>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="pw-wrap">
+          <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password"/>
+          <button type="button" class="pw-toggle" onclick="togglePw('password',this)" aria-label="Show password">
+            <svg viewBox="0 0 24 24" stroke-width="1.5">
+              <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+            </svg>
+          </button>
+        </div>
+        <p class="attempts" id="attempts-warn"></p>
+      </div>
+      <button type="submit" class="btn" id="login-btn">
+        <span id="login-txt">Sign In</span>
+        <span class="spinner" id="login-spin"></span>
+      </button>
+    </form>
+  </div>
+
+  <!-- RESET PASSWORD PANEL -->
+  <div class="panel" id="panel-reset">
+    <div class="alert err" id="reset-err"></div>
+    <div class="alert ok"  id="reset-ok"></div>
+    <p class="reset-hint">Enter your email and we'll send a link to reset your password.</p>
+    <form id="reset-form">
+      <div class="field">
+        <label for="reset-email">Email Address</label>
+        <input type="email" id="reset-email" placeholder="your@email.com" required autocomplete="email"/>
+      </div>
+      <button type="submit" class="btn" id="reset-btn">
+        <span id="reset-txt">Send Reset Link</span>
+        <span class="spinner" id="reset-spin"></span>
+      </button>
+    </form>
+  </div>
+
+  <a href="/" class="back">← Back to sondr.studio</a>
+</div>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const SUPABASE_URL      = 'https://jzjftfdexvymdrdokjjo.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6amZ0ZmRleHZ5bWRyZG9rampvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0MDg0MDgsImV4cCI6MjA5MTk4NDQwOH0.leOf1JeH0EX9TRlXT0ihCRUKoXuZW-b_CQrRX0cvefM';
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: { persistSession: true, autoRefreshToken: true }
+});
+
+// ── ROUTE BY ROLE ─────────────────────────────────────────────────
+function routeByRole(role) {
+  if (role === 'owner')      return '/owner.html';
+  if (role === 'admin') return '/operations.html';
+  return '/dashboard.html'; // instructor default
+}
+
+// Redirect if already signed in
+const { data: { session } } = await supabase.auth.getSession();
+if (session) {
+  const { data: profile } = await supabase
+    .from('profiles').select('role').eq('id', session.user.id).single();
+  window.location.href = routeByRole(profile?.role);
+}
+
+// ── RATE LIMITING (client-side guard) ────────────────────────────
+let attempts   = 0;
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_MS   = 15 * 60 * 1000;
+let lockedUntil    = parseInt(localStorage.getItem('sondr_locked') || '0');
+
+function isLocked() {
+  if (Date.now() < lockedUntil) return true;
+  if (lockedUntil && Date.now() >= lockedUntil) {
+    localStorage.removeItem('sondr_locked');
+    attempts = 0; lockedUntil = 0;
+  }
+  return false;
+}
+
+// ── SIGN IN ───────────────────────────────────────────────────────
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const errEl = document.getElementById('login-err');
+  errEl.style.display = 'none';
+
+  if (isLocked()) {
+    const mins = Math.ceil((lockedUntil - Date.now()) / 60000);
+    errEl.textContent = `Too many attempts. Try again in ${mins} minute${mins > 1 ? 's' : ''}.`;
+    errEl.style.display = 'block';
+    return;
+  }
+
+  setLoading('login', true);
+  const email    = document.getElementById('email').value.trim().toLowerCase();
+  const password = document.getElementById('password').value;
+
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+
+    const { data: profile, error: pErr } = await supabase
+      .from('profiles').select('role, is_active').eq('id', data.user.id).single();
+
+    if (pErr || !profile) throw new Error('Profile not found. Contact Gagan.');
+    if (profile.is_active === false) throw new Error('Your account is inactive. Contact Gagan.');
+
+    attempts = 0;
+    window.location.href = routeByRole(profile.role);
+
+  } catch (err) {
+    attempts++;
+    if (attempts >= MAX_ATTEMPTS) {
+      lockedUntil = Date.now() + LOCKOUT_MS;
+      localStorage.setItem('sondr_locked', lockedUntil.toString());
+      errEl.textContent = 'Too many failed attempts. Account locked for 15 minutes.';
+    } else {
+      const left = MAX_ATTEMPTS - attempts;
+      errEl.textContent = err.message || 'Invalid email or password.';
+      if (left <= 2) {
+        const warn = document.getElementById('attempts-warn');
+        warn.textContent = `${left} attempt${left > 1 ? 's' : ''} remaining before lockout`;
+        warn.style.display = 'block';
+      }
+    }
+    errEl.style.display = 'block';
+    setLoading('login', false);
+  }
+});
+
+// ── PASSWORD RESET ────────────────────────────────────────────────
+document.getElementById('reset-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const errEl = document.getElementById('reset-err');
+  const okEl  = document.getElementById('reset-ok');
+  errEl.style.display = 'none'; okEl.style.display = 'none';
+  setLoading('reset', true);
+
+  const email = document.getElementById('reset-email').value.trim().toLowerCase();
+  try {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + '/change-password.html'
+    });
+    if (error) throw error;
+    okEl.textContent = 'Reset link sent! Check your inbox (and spam folder).';
+    okEl.style.display = 'block';
+    document.getElementById('reset-form').reset();
+  } catch (err) {
+    errEl.textContent = err.message || 'Failed to send reset email. Please try again.';
+    errEl.style.display = 'block';
+  }
+  setLoading('reset', false);
+});
+
+// ── HELPERS ───────────────────────────────────────────────────────
+function setLoading(id, on) {
+  document.getElementById(`${id}-btn`).disabled  = on;
+  document.getElementById(`${id}-txt`).style.display  = on ? 'none'         : 'inline';
+  document.getElementById(`${id}-spin`).style.display = on ? 'inline-block' : 'none';
+}
+
+window.showTab = (tab) => {
+  document.querySelectorAll('.tab,.panel').forEach(el => el.classList.remove('active'));
+  document.getElementById(`panel-${tab}`).classList.add('active');
+  document.querySelectorAll('.tab')[tab === 'login' ? 0 : 1].classList.add('active');
+};
+
+window.togglePw = (inputId, btn) => {
+  const inp  = document.getElementById(inputId);
+  const show = inp.type === 'password';
+  inp.type = show ? 'text' : 'password';
+  btn.querySelector('svg').style.opacity = show ? '0.7' : '0.3';
+};
+</script>
+</body>
+</html>
